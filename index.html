@@ -1,589 +1,270 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>برگه بیوگرافی</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>برگه پیوگرافی</title>
+    <style>
+        /* فونت فارسی استاندارد */
+        @import url('https://cdn.jsdelivr.net/npm/vazirmatn@33.0.3/Vazirmatn-font-face.css');
+        * {
+            font-family: 'Vazirmatn', Tahoma, sans-serif;
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            background-color: #f5f5f5;
+            padding: 10px;
+        }
 
-  <!-- فونت (اختیاری) -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700;800&display=swap" rel="stylesheet">
+        /* کانتینر سایز A4 با تطبیق به صفحه موبایل */
+        .a4-page {
+            width: 210mm;
+            min-height: 297mm;
+            max-width: 100vw;
+            margin: 10px auto;
+            padding: 25px 20px;
+            background: white;
+            box-shadow: 0 0 6px rgba(0,0,0,0.08);
+            direction: rtl;
+        }
 
-  <!-- html2canvas برای خروجی JPG -->
-  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+        /* عنوان اصلی */
+        .form-title {
+            text-align: center;
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #222;
+        }
 
-  <style>
-    :root{
-      --sheet-w: 900px;
-      --sheet-h: 1550px;
+        /* جدول دو ستونی اول */
+        .two-col-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 18px;
+        }
+        .two-col-table td {
+            border: 1px solid #ddd;
+            padding: 8px 10px;
+            vertical-align: top;
+            width: 50%;
+        }
+        .two-col-table label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
 
-      --black:#000;
-      --red:#d40000;
+        /* ورودی‌های فرم */
+        .input-field {
+            width: 100%;
+            padding: 6px 8px;
+            margin-top: 4px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            direction: rtl;
+        }
+        .input-field.full-width {
+            width: 100%;
+            margin: 8px 0;
+        }
 
-      --cell-pad: 8px 12px;
-      --line-gap: 10px;
+        /* بخش‌های فرم */
+        .form-section {
+            margin-bottom: 20px;
+            line-height: 1.8;
+        }
+        .section-title {
+            font-weight: bold;
+            font-size: 1.05rem;
+            margin-bottom: 8px;
+            display: block;
+        }
+        .sub-item {
+            margin-right: 15px;
+            display: block;
+            margin-bottom: 6px;
+        }
 
-      --base-font: 16px; /* روی موبایل کمتر از 16 باعث زوم iOS می‌شود */
-    }
+        /* گروه‌های چک‌باکس */
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px 18px;
+            margin: 8px 0;
+        }
+        .checkbox-group label {
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        .checkbox-group input[type="checkbox"] {
+            margin-left: 5px;
+        }
 
-    *{ box-sizing:border-box; }
-    html, body{ height:100%; }
-    body{
-      margin:0;
-      font-family: "Vazirmatn", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
-      background:#f3f3f3;
-      color:#000;
-    }
+        /* متن پایین صفحه */
+        .footer-text {
+            margin-top: 40px;
+            font-size: 0.9rem;
+            line-height: 1.7;
+        }
+        .footer-input {
+            border: none;
+            border-bottom: 1px solid #333;
+            width: 120px;
+            text-align: center;
+            margin: 0 5px;
+        }
 
-    .toolbar{
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      background: #ffffff;
-      border-bottom: 1px solid #ddd;
-      padding: 10px 12px;
-      display:flex;
-      gap:10px;
-      justify-content:center;
-    }
-    .toolbar button{
-      font-family: inherit;
-      font-size: 15px;
-      padding: 10px 12px;
-      border:1px solid #111;
-      background:#fff;
-      cursor:pointer;
-      border-radius: 10px;
-    }
-
-    #viewport{
-      padding: 10px 10px 24px;
-      display:flex;
-      justify-content:center;
-      align-items:flex-start;
-    }
-
-    /* کل برگه (قاب بیرونی مثل تصویر) */
-    #sheet{
-      width: var(--sheet-w);
-      height: var(--sheet-h);
-      background:#fff;
-      border: 3px solid var(--black);
-      padding: 18px;
-    }
-
-    /* قاب داخلی */
-    #frame{
-      width:100%;
-      height:100%;
-      border: 2px solid var(--black);
-      overflow:hidden;
-      background:#fff;
-    }
-
-    table.form{
-      width:100%;
-      height:100%;
-      border-collapse: collapse;
-      table-layout: fixed;
-      font-size: var(--base-font);
-    }
-    table.form th, table.form td{
-      border: 1px solid var(--black);
-      vertical-align: middle;
-      padding: var(--cell-pad);
-    }
-
-    tr.title-row th{
-      height: 86px;
-      font-size: 30px;
-      font-weight: 800;
-      text-align:center;
-    }
-
-    .line{
-      display:flex;
-      align-items:center;
-      gap: 10px;
-      min-width: 0;
-    }
-    .q{
-      color:#000;
-      font-weight: 400;
-      white-space: nowrap;
-    }
-
-    /* پاسخ‌ها: قرمز و Bold */
-    .ans, .ansArea, .ansSelect, .ansInline{
-      color: var(--red);
-      font-weight: 800;
-      font-size: var(--base-font);
-      background: transparent;
-      border: 0;
-      outline: none;
-      min-width: 0;
-    }
-    .ans{ flex: 1; }
-    .ansSelect{ flex: 1; }
-
-    /* برای اینکه «باکس نوشتاری» داشته باشد ولی شبیه فرم چاپی بماند */
-    .ans:focus, .ansArea:focus, .ansSelect:focus, .ansInline:focus{
-      outline: 1px dashed #888;
-      outline-offset: 2px;
-    }
-
-    .ansArea{
-      flex: 1;
-      width: 100%;
-      resize: none;
-      line-height: 1.5;
-    }
-
-    .cell-vstack{
-      display:flex;
-      flex-direction: column;
-      gap: var(--line-gap);
-      height: 100%;
-      min-width:0;
-    }
-
-    /* چک‌باکس‌ها */
-    .cb-row{
-      display:flex;
-      align-items:center;
-      gap: 18px;
-      flex-wrap: wrap;
-      min-width:0;
-    }
-    .cb{
-      display:inline-flex;
-      align-items:center;
-      gap: 8px;
-      white-space: nowrap;
-    }
-    input[type="checkbox"]{
-      width: 18px;
-      height: 18px;
-      accent-color: #bfbfbf; /* شبیه خاکستری فرم */
-    }
-
-    /* ارتفاع ردیف‌ها برای شبیه شدن به تصویر */
-    .r-2col{ height: 58px; }
-    .r-job{ height: 70px; }
-    .r-income{ height: 62px; }
-    .r-worry{ height: 120px; }
-    .r-personality{ height: 125px; }
-    .r-single{ height: 68px; }
-    .r-instagram{ height: 62px; }
-    .r-remaining{ height: 160px; }
-    .r-statement{ height: 120px; }
-
-    .statement{
-      font-size: 24px;
-      font-weight: 800;
-      line-height: 1.8;
-      text-align: right;
-      display:block;
-      unicode-bidi: plaintext;
-    }
-    .ansInline{
-      width: 190px;
-      text-align: center;
-      border-bottom: 1px solid #000;
-      padding: 0 6px;
-    }
-
-    /* فیت شدن کل فرم داخل صفحه موبایل بدون به‌هم‌ریختن نسبت‌ها */
-    #sheetWrap{
-      width: var(--sheet-w);
-      height: var(--sheet-h);
-      transform-origin: top center;
-    }
-
-    /* هنگام خروجی گرفتن: دکمه‌ها حذف */
-    body.exporting .toolbar{ display:none; }
-  </style>
+        /* تنظیمات موبایل */
+        @media (max-width: 768px) {
+            .a4-page {
+                padding: 18px 12px;
+            }
+            .form-title {
+                font-size: 1.2rem;
+            }
+            .two-col-table td {
+                font-size: 0.9rem;
+                padding: 6px 8px;
+            }
+            .checkbox-group {
+                gap: 10px 14px;
+            }
+        }
+    </style>
 </head>
-
 <body>
-  <div class="toolbar">
-    <button id="btnJpg" type="button">خروجی JPG</button>
-    <button id="btnClear" type="button">پاک کردن</button>
-  </div>
+    <div class="a4-page">
+        <!-- عنوان فرم -->
+        <h1 class="form-title">برگه پیوگرافی</h1>
 
-  <div id="viewport">
-    <div id="sheetWrap">
-      <div id="sheet">
-        <div id="frame">
-          <table class="form">
-            <tr class="title-row">
-              <th colspan="2">برگه بیوگرافی</th>
+        <!-- جدول دو ستونی اطلاعات اولیه -->
+        <table class="two-col-table">
+            <tr>
+                <td>
+                    <label>نام و نام خانوادگی معرف:
+                        <input type="text" class="input-field">
+                    </label>
+                    <label>روز پذیرش و تاریخ:
+                        <input type="text" class="input-field">
+                    </label>
+                    <label>ساعت دقیق پذیرش:
+                        <input type="text" class="input-field">
+                    </label>
+                </td>
+                <td>
+                    <label>نام و نام خانوادگی بیمار:
+                        <input type="text" class="input-field">
+                    </label>
+                    <label>سن بیمار:
+                        <input type="text" class="input-field">
+                    </label>
+                    <label>نسبت به معرف:
+                        <input type="text" class="input-field">
+                    </label>
+                </td>
             </tr>
+        </table>
 
-            <tr class="r-2col">
-              <td>
-                <div class="line">
-                  <span class="q">نام و نام خانوادگی معرف:</span>
-                  <input class="ans" data-field="referrerName" type="text" inputmode="text" />
-                </div>
-              </td>
-              <td>
-                <div class="line">
-                  <span class="q">نام و نام خانوادگی پاراسیکت:</span>
-                  <input class="ans" data-field="prospectName" type="text" inputmode="text" />
-                </div>
-              </td>
-            </tr>
+        <!-- بخش تحصیلات و وضعیت -->
+        <div class="form-section">
+            <span class="section-title">تحصیلات:</span>
+            <label class="sub-item">رشته تحصیلی:
+                <input type="text" class="input-field full-width">
+            </label>
 
-            <tr class="r-2col">
-              <td>
-                <div class="line">
-                  <span class="q">ساعت دقیق و تاریخ پرزنت:</span>
-                  <input class="ans" data-field="presentDateTime" type="text" inputmode="text" />
-                </div>
-              </td>
-              <td>
-                <div class="line">
-                  <span class="q">سن پاراسیکت:</span>
-                  <input class="ans" data-field="prospectAge" type="text" inputmode="numeric" />
-                </div>
-              </td>
-            </tr>
+            <span class="section-title">وضعیت تأهل:</span>
+            <label class="sub-item">تعداد فرزند:
+                <input type="number" class="input-field full-width">
+            </label>
 
-            <tr class="r-2col">
-              <td>
-                <div class="line">
-                  <span class="q">مکان پرزنت:</span>
-                  <input class="ans" data-field="presentPlace" type="text" inputmode="text" />
-                </div>
-              </td>
-              <td>
-                <div class="line">
-                  <span class="q">نسبت با معرف:</span>
-                  <input class="ans" data-field="relationToReferrer" type="text" inputmode="text" />
-                </div>
-              </td>
-            </tr>
-
-            <tr class="r-2col">
-              <td>
-                <div class="line">
-                  <span class="q">تحصیلات:</span>
-                  <div style="flex:1; min-width:0;">
-                    <select class="ansSelect" data-field="education">
-                      <option value="" selected>انتخاب کنید</option>
-                      <option>دیپلم</option>
-                      <option>کاردانی</option>
-                      <option>کارشناسی</option>
-                      <option>کارشناسی ارشد</option>
-                      <option>دکترا</option>
-                      <option>سایر</option>
-                    </select>
-                  </div>
-                </div>
-              </td>
-              <td>
-                <div class="line">
-                  <span class="q">رشته تحصیلی:</span>
-                  <input class="ans" data-field="major" type="text" inputmode="text" />
-                </div>
-              </td>
-            </tr>
-
-            <tr class="r-2col">
-              <td>
-                <div class="line">
-                  <span class="q">وضعیت تاهل:</span>
-                  <div style="flex:1; min-width:0;">
-                    <select class="ansSelect" data-field="maritalStatus">
-                      <option value="" selected>انتخاب کنید</option>
-                      <option>مجرد</option>
-                      <option>متاهل</option>
-                      <option>سایر</option>
-                    </select>
-                  </div>
-                </div>
-              </td>
-              <td>
-                <div class="line">
-                  <span class="q">تعداد فرزند:</span>
-                  <div style="flex:1; min-width:0;">
-                    <select class="ansSelect" data-field="childrenCount">
-                      <option value="" selected>انتخاب کنید</option>
-                      <option>۰</option>
-                      <option>۱</option>
-                      <option>۲</option>
-                      <option>۳</option>
-                      <option>۴+</option>
-                    </select>
-                  </div>
-                </div>
-              </td>
-            </tr>
-
-            <tr class="r-job">
-              <td colspan="2">
-                <div class="line">
-                  <span class="q">شغل فعلی و سابقه مشاغل قبلی:</span>
-                  <textarea class="ansArea" data-field="jobHistory" rows="1"></textarea>
-                </div>
-              </td>
-            </tr>
-
-            <tr class="r-income">
-              <td colspan="2">
-                <div class="line">
-                  <span class="q">میزان درآمد:</span>
-                  <input class="ans" data-field="income" type="text" inputmode="text" />
-                </div>
-              </td>
-            </tr>
-
-            <tr class="r-worry">
-              <td colspan="2">
-                <div class="cell-vstack">
-                  <div class="line">
-                    <span class="q">دغدغه فعلی:</span>
-                    <div class="cb-row">
-                      <label class="cb"><input type="checkbox" data-field="worryIncome">درآمد</label>
-                      <label class="cb"><input type="checkbox" data-field="worryTime">زمان</label>
-                      <label class="cb"><input type="checkbox" data-field="worryProgress">پیشرفت</label>
-                      <label class="cb"><input type="checkbox" data-field="worryJobSecurity">امنیت شغلی</label>
-                    </div>
-                  </div>
-
-                  <div class="line">
-                    <span class="q">توضیحات بیشتر:</span>
-                    <textarea class="ansArea" data-field="worryMore" rows="2"></textarea>
-                  </div>
-                </div>
-              </td>
-            </tr>
-
-            <tr class="r-personality">
-              <td colspan="2">
-                <div class="cell-vstack">
-                  <div class="line">
-                    <span class="q">ویژگی های شخصیتی:</span>
-                    <div class="cb-row">
-                      <label class="cb"><input type="checkbox" data-field="pSocial">اجتماعی</label>
-                      <label class="cb"><input type="checkbox" data-field="pRisky">ریسک‌پذیر</label>
-                      <label class="cb"><input type="checkbox" data-field="pIndependent">مستقل</label>
-                      <label class="cb"><input type="checkbox" data-field="pReligious">مذهبی</label>
-                      <label class="cb"><input type="checkbox" data-field="pZak">زک</label>
-                      <label class="cb"><input type="checkbox" data-field="pSkeptic">شکاک</label>
-                      <label class="cb"><input type="checkbox" data-field="pFriendly">رفیق‌باز</label>
-                    </div>
-                  </div>
-
-                  <div class="line" style="justify-content: space-between; gap:14px;">
-                    <div class="cb-row" style="gap:22px;">
-                      <label class="cb"><input type="checkbox" data-field="pNewExperiences">خواستار تجربه های تازه</label>
-                      <label class="cb"><input type="checkbox" data-field="pCareOthersTalk">اهمیت‌دهنده به حرف اطرافیان</label>
-                    </div>
-                    <div style="flex:1"></div>
-                  </div>
-
-                  <div class="line">
-                    <span class="q">توضیحات بیشتر:</span>
-                    <textarea class="ansArea" data-field="personalityMore" rows="2"></textarea>
-                  </div>
-                </div>
-              </td>
-            </tr>
-
-            <tr class="r-single">
-              <td colspan="2">
-                <div class="line">
-                  <span class="q">سرگرمی های مورد علاقه:</span>
-                  <textarea class="ansArea" data-field="hobbies" rows="1"></textarea>
-                </div>
-              </td>
-            </tr>
-
-            <tr class="r-single">
-              <td colspan="2">
-                <div class="line">
-                  <span class="q">میزان آشنایی با علم روز و بازاریابی شبکه‌ای:</span>
-                  <textarea class="ansArea" data-field="knowledgeNetworkMarketing" rows="1"></textarea>
-                </div>
-              </td>
-            </tr>
-
-            <tr class="r-single">
-              <td colspan="2">
-                <div class="line">
-                  <span class="q">تاریخ آخرین دیدار و علت دیدار:</span>
-                  <textarea class="ansArea" data-field="lastMeet" rows="1"></textarea>
-                </div>
-              </td>
-            </tr>
-
-            <tr class="r-single">
-              <td colspan="2">
-                <div class="line">
-                  <span class="q">آخرین خاطره مشترک:</span>
-                  <textarea class="ansArea" data-field="lastMemory" rows="1"></textarea>
-                </div>
-              </td>
-            </tr>
-
-            <tr class="r-single">
-              <td colspan="2">
-                <div class="line">
-                  <span class="q">نیازهای امروز و بزرگترین اهداف:</span>
-                  <textarea class="ansArea" data-field="needsGoals" rows="1"></textarea>
-                </div>
-              </td>
-            </tr>
-
-            <tr class="r-single">
-              <td colspan="2">
-                <div class="line">
-                  <span class="q">چالش های زندگی:</span>
-                  <textarea class="ansArea" data-field="lifeChallenges" rows="1"></textarea>
-                </div>
-              </td>
-            </tr>
-
-            <tr class="r-single">
-              <td colspan="2">
-                <div class="line">
-                  <span class="q">اطلاعات داده شده در زنگ دعوت (دید کاری):</span>
-                  <textarea class="ansArea" data-field="invitationCallInfo" rows="1"></textarea>
-                </div>
-              </td>
-            </tr>
-
-            <tr class="r-instagram">
-              <td colspan="2">
-                <div class="line">
-                  <span class="q">آدرس اینستاگرام:</span>
-                  <input class="ans" data-field="instagram" type="text" inputmode="text" />
-                </div>
-              </td>
-            </tr>
-
-            <tr class="r-remaining">
-              <td colspan="2">
-                <div class="line" style="align-items:flex-start;">
-                  <span class="q">توضیحات باقیمانده:</span>
-                  <textarea class="ansArea" data-field="remaining" rows="4"></textarea>
-                </div>
-              </td>
-            </tr>
-
-            <tr class="r-statement">
-              <td colspan="2">
-                <div class="statement">
-                  اینجانب ( <input class="ansInline" data-field="statementMe" type="text" /> )
-                  درخواست تاییدیه جهت زنگ دعوت به ایشان و مشخص کردن پرزنتور از
-                  آقا / خانم ( <input class="ansInline" data-field="statementPresenter" type="text" /> )
-                  (اولین فالوئر) را دارم.
-                </div>
-              </td>
-            </tr>
-
-          </table>
+            <span class="section-title">شغل فعلی و سابقه مشاغل قبلی:</span>
+            <textarea class="input-field full-width" rows="2" placeholder="متن را اینجا وارد کنید..."></textarea>
         </div>
-      </div>
+
+        <!-- بخش درآمد و دفعه فعلی -->
+        <div class="form-section">
+            <span class="section-title">میزان درآمد:</span>
+            <input type="text" class="input-field full-width">
+
+            <span class="section-title">دفعه فعلی:</span>
+            <div class="checkbox-group">
+                <label><input type="checkbox"> درآمد</label>
+                <label><input type="checkbox"> زمان</label>
+                <label><input type="checkbox"> پیشرفت</label>
+                <label><input type="checkbox"> امانت شغلی</label>
+            </div>
+
+            <span class="section-title">توضیحات پیشتاز:</span>
+            <textarea class="input-field full-width" rows="2"></textarea>
+        </div>
+
+        <!-- ویژگی‌های شخصیتی -->
+        <div class="form-section">
+            <span class="section-title">ویژگی‌های شخصیتی:</span>
+            <div class="checkbox-group">
+                <label><input type="checkbox"> اجتماعی</label>
+                <label><input type="checkbox"> ریسک‌دار</label>
+                <label><input type="checkbox"> مستقل</label>
+                <label><input type="checkbox"> مذهبی</label>
+                <label><input type="checkbox"> رک</label>
+                <label><input type="checkbox"> شاکی</label>
+                <label><input type="checkbox"> رفیق‌باز</label>
+            </div>
+        </div>
+
+        <!-- خواسته‌ها و علایق -->
+        <div class="form-section">
+            <span class="section-title">خواسته تجریدهای تازه:</span>
+            <div class="checkbox-group">
+                <label><input type="checkbox"> اهمیت‌دیده به حرف ارابهان</label>
+                <label><input type="checkbox"> سایر موارد</label>
+            </div>
+            <label class="sub-item">توضیحات پیشتاز:
+                <textarea class="input-field full-width" rows="1"></textarea>
+            </label>
+
+            <span class="section-title">سرگروه های مورد علاقه:</span>
+            <input type="text" class="input-field full-width">
+        </div>
+
+        <!-- سایر بخش‌های فرم -->
+        <div class="form-section">
+            <span class="section-title">میزان اتمام پل مرور و بازاریابی شبکه:</span>
+            <input type="text" class="input-field full-width">
+
+            <span class="section-title">تاریخ آخرین دید و وقت دیدار:</span>
+            <input type="text" class="input-field full-width">
+
+            <span class="section-title">آخرین خاطره مشترک:</span>
+            <textarea class="input-field full-width" rows="2"></textarea>
+
+            <span class="section-title">پیاده‌سازی امروزی و پرتکرار اهداف:</span>
+            <textarea class="input-field full-width" rows="2"></textarea>
+
+            <span class="section-title">چالش‌های زنی:</span>
+            <textarea class="input-field full-width" rows="2"></textarea>
+
+            <span class="section-title">اطلاعات داده شده در زنگ دعوت (دید کاری):</span>
+            <textarea class="input-field full-width" rows="2"></textarea>
+
+            <span class="section-title">آدرس ایستگاه‌مام:</span>
+            <input type="text" class="input-field full-width">
+
+            <span class="section-title">توضیحات باقی‌مانده:</span>
+            <textarea class="input-field full-width" rows="3"></textarea>
+        </div>
+
+        <!-- متن پایین صفحه -->
+        <div class="footer-text">
+            <p>اینجاب <input type="text" class="footer-input"> ( درخواست تأیید هویت به اعضا و مشخص کردن پرتکرور )</p>
+            <p>از آقا / خانم <input type="text" class="footer-input"> ( اولین فالوپر ) را درآم.</p>
+        </div>
+
     </div>
-  </div>
-
-  <script>
-    const sheetWrap = document.getElementById('sheetWrap');
-    const sheet = document.getElementById('sheet');
-    const btnJpg = document.getElementById('btnJpg');
-    const btnClear = document.getElementById('btnClear');
-
-    function fitToScreen() {
-      const baseW = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--sheet-w'));
-      const baseH = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--sheet-h'));
-
-      const toolbar = document.querySelector('.toolbar');
-      const toolbarH = toolbar ? toolbar.getBoundingClientRect().height : 0;
-
-      const vw = window.innerWidth;
-      const vh = window.innerHeight;
-
-      // کمی حاشیه
-      const availW = Math.max(0, vw - 16);
-      const availH = Math.max(0, vh - toolbarH - 16);
-
-      const s = Math.min(availW / baseW, availH / baseH, 1);
-
-      sheetWrap.style.transform = `scale(${s})`;
-    }
-
-    window.addEventListener('resize', fitToScreen, { passive: true });
-    window.addEventListener('orientationchange', fitToScreen, { passive: true });
-    fitToScreen();
-
-    function clearForm() {
-      const fields = sheet.querySelectorAll('[data-field]');
-      fields.forEach(el => {
-        if (el.tagName === 'SELECT') el.value = '';
-        else if (el.type === 'checkbox') el.checked = false;
-        else el.value = '';
-      });
-    }
-    btnClear.addEventListener('click', clearForm);
-
-    async function exportJpg() {
-      // clone برای خروجی با مقیاس 1 (بدون تاثیر fit موبایل)
-      document.body.classList.add('exporting');
-
-      const clone = sheet.cloneNode(true);
-
-      // انتقال مقادیر ورودی‌ها به clone
-      const origFields = sheet.querySelectorAll('[data-field]');
-      origFields.forEach(orig => {
-        const key = orig.getAttribute('data-field');
-        const target = clone.querySelector(`[data-field="${CSS.escape(key)}"]`);
-        if (!target) return;
-
-        if (orig.tagName === 'SELECT') target.value = orig.value;
-        else if (orig.type === 'checkbox') target.checked = orig.checked;
-        else target.value = orig.value;
-      });
-
-      // قرار دادن clone خارج از دید
-      const holder = document.createElement('div');
-      holder.style.position = 'fixed';
-      holder.style.left = '-100000px';
-      holder.style.top = '0';
-      holder.style.width = getComputedStyle(sheet).width;
-      holder.style.height = getComputedStyle(sheet).height;
-      holder.appendChild(clone);
-      document.body.appendChild(holder);
-
-      // مطمئن شو فونت‌ها لود شده‌اند (اگر مرورگر پشتیبانی کند)
-      if (document.fonts && document.fonts.ready) {
-        try { await document.fonts.ready; } catch (_) {}
-      }
-
-      const canvas = await html2canvas(clone, {
-        backgroundColor: '#ffffff',
-        scale: 2,
-        useCORS: true
-      });
-
-      const dataUrl = canvas.toDataURL('image/jpeg', 0.95);
-
-      // دانلود (در بعضی iOS ها دانلود مستقیم ممکن است محدود باشد)
-      const a = document.createElement('a');
-      a.href = dataUrl;
-      a.download = 'bio.jpg';
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-
-      holder.remove();
-      document.body.classList.remove('exporting');
-    }
-
-    btnJpg.addEventListener('click', exportJpg);
-  </script>
 </body>
 </html>
