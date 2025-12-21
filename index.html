@@ -1,270 +1,174 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>برگه پیوگرافی</title>
-    <style>
-        /* فونت فارسی استاندارد */
-        @import url('https://cdn.jsdelivr.net/npm/vazirmatn@33.0.3/Vazirmatn-font-face.css');
-        * {
-            font-family: 'Vazirmatn', Tahoma, sans-serif;
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-        body {
-            background-color: #f5f5f5;
-            padding: 10px;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>برگه بیوگرافی</title>
+  <style>
+    body {
+      font-family: 'Tahoma', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #eee;
+    }
 
-        /* کانتینر سایز A4 با تطبیق به صفحه موبایل */
-        .a4-page {
-            width: 210mm;
-            min-height: 297mm;
-            max-width: 100vw;
-            margin: 10px auto;
-            padding: 25px 20px;
-            background: white;
-            box-shadow: 0 0 6px rgba(0,0,0,0.08);
-            direction: rtl;
-        }
+    .a4 {
+      width: 210mm;
+      max-width: 100%;
+      margin: 20px auto;
+      background: white;
+      padding: 20px;
+      box-sizing: border-box;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
 
-        /* عنوان اصلی */
-        .form-title {
-            text-align: center;
-            font-size: 1.4rem;
-            font-weight: bold;
-            margin-bottom: 20px;
-            padding-bottom: 8px;
-            border-bottom: 1px solid #222;
-        }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
 
-        /* جدول دو ستونی اول */
-        .two-col-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 18px;
-        }
-        .two-col-table td {
-            border: 1px solid #ddd;
-            padding: 8px 10px;
-            vertical-align: top;
-            width: 50%;
-        }
-        .two-col-table label {
-            display: block;
-            margin-bottom: 8px;
-            font-size: 0.95rem;
-        }
+    td, th {
+      border: 1px solid black;
+      padding: 6px;
+      vertical-align: top;
+    }
 
-        /* ورودی‌های فرم */
-        .input-field {
-            width: 100%;
-            padding: 6px 8px;
-            margin-top: 4px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-size: 0.9rem;
-            direction: rtl;
-        }
-        .input-field.full-width {
-            width: 100%;
-            margin: 8px 0;
-        }
+    input[type="text"], textarea {
+      width: 100%;
+      border: none;
+      background: transparent;
+      font-family: inherit;
+      font-size: 14px;
+      resize: vertical;
+    }
 
-        /* بخش‌های فرم */
-        .form-section {
-            margin-bottom: 20px;
-            line-height: 1.8;
-        }
-        .section-title {
-            font-weight: bold;
-            font-size: 1.05rem;
-            margin-bottom: 8px;
-            display: block;
-        }
-        .sub-item {
-            margin-right: 15px;
-            display: block;
-            margin-bottom: 6px;
-        }
+    .checkbox-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
 
-        /* گروه‌های چک‌باکس */
-        .checkbox-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px 18px;
-            margin: 8px 0;
-        }
-        .checkbox-group label {
-            cursor: pointer;
-            font-size: 0.9rem;
-        }
-        .checkbox-group input[type="checkbox"] {
-            margin-left: 5px;
-        }
+    .checkbox-group label {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
 
-        /* متن پایین صفحه */
-        .footer-text {
-            margin-top: 40px;
-            font-size: 0.9rem;
-            line-height: 1.7;
-        }
-        .footer-input {
-            border: none;
-            border-bottom: 1px solid #333;
-            width: 120px;
-            text-align: center;
-            margin: 0 5px;
-        }
+    .no-border {
+      border: none !important;
+    }
 
-        /* تنظیمات موبایل */
-        @media (max-width: 768px) {
-            .a4-page {
-                padding: 18px 12px;
-            }
-            .form-title {
-                font-size: 1.2rem;
-            }
-            .two-col-table td {
-                font-size: 0.9rem;
-                padding: 6px 8px;
-            }
-            .checkbox-group {
-                gap: 10px 14px;
-            }
-        }
-    </style>
+    h2 {
+      text-align: center;
+      margin: 0 0 15px;
+    }
+  </style>
 </head>
 <body>
-    <div class="a4-page">
-        <!-- عنوان فرم -->
-        <h1 class="form-title">برگه پیوگرافی</h1>
-
-        <!-- جدول دو ستونی اطلاعات اولیه -->
-        <table class="two-col-table">
-            <tr>
-                <td>
-                    <label>نام و نام خانوادگی معرف:
-                        <input type="text" class="input-field">
-                    </label>
-                    <label>روز پذیرش و تاریخ:
-                        <input type="text" class="input-field">
-                    </label>
-                    <label>ساعت دقیق پذیرش:
-                        <input type="text" class="input-field">
-                    </label>
-                </td>
-                <td>
-                    <label>نام و نام خانوادگی بیمار:
-                        <input type="text" class="input-field">
-                    </label>
-                    <label>سن بیمار:
-                        <input type="text" class="input-field">
-                    </label>
-                    <label>نسبت به معرف:
-                        <input type="text" class="input-field">
-                    </label>
-                </td>
-            </tr>
-        </table>
-
-        <!-- بخش تحصیلات و وضعیت -->
-        <div class="form-section">
-            <span class="section-title">تحصیلات:</span>
-            <label class="sub-item">رشته تحصیلی:
-                <input type="text" class="input-field full-width">
-            </label>
-
-            <span class="section-title">وضعیت تأهل:</span>
-            <label class="sub-item">تعداد فرزند:
-                <input type="number" class="input-field full-width">
-            </label>
-
-            <span class="section-title">شغل فعلی و سابقه مشاغل قبلی:</span>
-            <textarea class="input-field full-width" rows="2" placeholder="متن را اینجا وارد کنید..."></textarea>
-        </div>
-
-        <!-- بخش درآمد و دفعه فعلی -->
-        <div class="form-section">
-            <span class="section-title">میزان درآمد:</span>
-            <input type="text" class="input-field full-width">
-
-            <span class="section-title">دفعه فعلی:</span>
-            <div class="checkbox-group">
-                <label><input type="checkbox"> درآمد</label>
-                <label><input type="checkbox"> زمان</label>
-                <label><input type="checkbox"> پیشرفت</label>
-                <label><input type="checkbox"> امانت شغلی</label>
-            </div>
-
-            <span class="section-title">توضیحات پیشتاز:</span>
-            <textarea class="input-field full-width" rows="2"></textarea>
-        </div>
-
-        <!-- ویژگی‌های شخصیتی -->
-        <div class="form-section">
-            <span class="section-title">ویژگی‌های شخصیتی:</span>
-            <div class="checkbox-group">
-                <label><input type="checkbox"> اجتماعی</label>
-                <label><input type="checkbox"> ریسک‌دار</label>
-                <label><input type="checkbox"> مستقل</label>
-                <label><input type="checkbox"> مذهبی</label>
-                <label><input type="checkbox"> رک</label>
-                <label><input type="checkbox"> شاکی</label>
-                <label><input type="checkbox"> رفیق‌باز</label>
-            </div>
-        </div>
-
-        <!-- خواسته‌ها و علایق -->
-        <div class="form-section">
-            <span class="section-title">خواسته تجریدهای تازه:</span>
-            <div class="checkbox-group">
-                <label><input type="checkbox"> اهمیت‌دیده به حرف ارابهان</label>
-                <label><input type="checkbox"> سایر موارد</label>
-            </div>
-            <label class="sub-item">توضیحات پیشتاز:
-                <textarea class="input-field full-width" rows="1"></textarea>
-            </label>
-
-            <span class="section-title">سرگروه های مورد علاقه:</span>
-            <input type="text" class="input-field full-width">
-        </div>
-
-        <!-- سایر بخش‌های فرم -->
-        <div class="form-section">
-            <span class="section-title">میزان اتمام پل مرور و بازاریابی شبکه:</span>
-            <input type="text" class="input-field full-width">
-
-            <span class="section-title">تاریخ آخرین دید و وقت دیدار:</span>
-            <input type="text" class="input-field full-width">
-
-            <span class="section-title">آخرین خاطره مشترک:</span>
-            <textarea class="input-field full-width" rows="2"></textarea>
-
-            <span class="section-title">پیاده‌سازی امروزی و پرتکرار اهداف:</span>
-            <textarea class="input-field full-width" rows="2"></textarea>
-
-            <span class="section-title">چالش‌های زنی:</span>
-            <textarea class="input-field full-width" rows="2"></textarea>
-
-            <span class="section-title">اطلاعات داده شده در زنگ دعوت (دید کاری):</span>
-            <textarea class="input-field full-width" rows="2"></textarea>
-
-            <span class="section-title">آدرس ایستگاه‌مام:</span>
-            <input type="text" class="input-field full-width">
-
-            <span class="section-title">توضیحات باقی‌مانده:</span>
-            <textarea class="input-field full-width" rows="3"></textarea>
-        </div>
-
-        <!-- متن پایین صفحه -->
-        <div class="footer-text">
-            <p>اینجاب <input type="text" class="footer-input"> ( درخواست تأیید هویت به اعضا و مشخص کردن پرتکرور )</p>
-            <p>از آقا / خانم <input type="text" class="footer-input"> ( اولین فالوپر ) را درآم.</p>
-        </div>
-
-    </div>
+  <div class="a4">
+    <h2>برگه بیوگرافی</h2>
+    <table>
+      <tr>
+        <td>نام و نام خانوادگی معرف: <input type="text"></td>
+        <td>نام و نام خانوادگی پرسپکت: <input type="text"></td>
+      </tr>
+      <tr>
+        <td>روز و تاریخ تولد: <input type="text"></td>
+        <td>سن پرسپکت: <input type="text"></td>
+      </tr>
+      <tr>
+        <td>ساعت دقیق تولد: <input type="text"></td>
+        <td>نسبت با معرف: <input type="text"></td>
+      </tr>
+      <tr>
+        <td colspan="2">تحصیلات: <input type="text"></td>
+      </tr>
+      <tr>
+        <td colspan="2">رشته تحصیلی: <input type="text"></td>
+      </tr>
+      <tr>
+        <td colspan="2">تعداد فرزندان: <input type="text"></td>
+      </tr>
+      <tr>
+        <td colspan="2">وضعیت تأهل: <input type="text"></td>
+      </tr>
+      <tr>
+        <td colspan="2">شغل فعلی و سابقه مشاغل قبلی: <textarea rows="2"></textarea></td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          دغدغه فعلی:
+          <div class="checkbox-group">
+            <label><input type="checkbox"> درآمد</label>
+            <label><input type="checkbox"> زمان</label>
+            <label><input type="checkbox"> پیشرفت</label>
+            <label><input type="checkbox"> امنیت شغلی</label>
+          </div>
+          توضیحات بیشتر: <textarea rows="1"></textarea>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          ویژگی‌های شخصیتی:
+          <div class="checkbox-group">
+            <label><input type="checkbox"> اجتماعی</label>
+            <label><input type="checkbox"> ریسک‌پذیر</label>
+            <label><input type="checkbox"> مستقل</label>
+            <label><input type="checkbox"> مذهبی</label>
+            <label><input type="checkbox"> رک</label>
+            <label><input type="checkbox"> شکاک</label>
+            <label><input type="checkbox"> رفیق‌باز</label>
+          </div>
+          توضیحات بیشتر: <textarea rows="1"></textarea>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          خواسته، تجربه‌های تازه، اهمیت‌دهنده به حرف اطرافیان:
+          <textarea rows="2"></textarea>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">سرگرمی مورد علاقه: <textarea rows="2"></textarea></td>
+      </tr>
+      <tr>
+        <td colspan="2">میزان آشنایی با علم روز و بازاریابی شبکه‌ای: <textarea rows="2"></textarea></td>
+      </tr>
+      <tr>
+        <td colspan="2">تاریخ آخرین دیدار و علت دیدار: <textarea rows="2"></textarea></td>
+      </tr>
+      <tr>
+        <td colspan="2">آخرین خاطره مشترک: <textarea rows="2"></textarea></td>
+      </tr>
+      <tr>
+        <td colspan="2">نیازهای امروزه و بزرگ‌ترین اهداف: <textarea rows="2"></textarea></td>
+      </tr>
+      <tr>
+        <td colspan="2">چالش‌های زندگی: <textarea rows="2"></textarea></td>
+      </tr>
+      <tr>
+        <td colspan="2">اطلاعات داده شده در زمان زنگ دعوت (دید کاری): <textarea rows="2"></textarea></td>
+      </tr>
+      <tr>
+        <td colspan="2">آدرس اینستاگرام: <input type="text"></td>
+      </tr>
+      <tr>
+        <td colspan="2">توضیحات باقی‌مانده: <textarea rows="2"></textarea></td>
+      </tr>
+      <tr>
+        <td colspan="2" style="text-align: center;">
+          اینجانب (
+          <input type="text" style="width: 50px;">
+          ) درخواست تأییدیه جهت زنگ دعوت به ایشان و مشخص کردن پرزنتور (
+          اولین فالوئر
+          ) را دارم.
+          از آقا / خانم (
+          <input type="text" style="width: 100px;">
+          )
+        </td>
+      </tr>
+    </table>
+  </div>
 </body>
 </html>
