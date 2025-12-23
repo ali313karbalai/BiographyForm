@@ -52,23 +52,27 @@
       padding-bottom: 2px;
     }
     
-    /* اصلاح باکس توضیحات برای خروجی عکس */
-    textarea { 
-      width: 100%; 
-      resize: none; 
-      display: block;
-      min-height: 100px;
-      white-space: pre-wrap; /* حفظ شکست خطوط در عکس */
-    }
+    textarea { width: 100%; resize: none; overflow: hidden; display: block; min-height: 40px; }
 
     .answer-select {
-      border: none; outline: none; background: transparent;
-      color: red; font-size: 15px; font-weight: bold; font-family: Tahoma, sans-serif;
-      text-align: right; direction: rtl; width: auto; flex-grow: 1;
+      border: none; 
+      outline: none; 
+      background: transparent;
+      color: red;
+      font-size: 15px; 
+      font-weight: bold; 
+      font-family: Tahoma, sans-serif;
+      text-align: right;
+      direction: rtl;
+      width: auto; 
+      flex-grow: 1;
       appearance: none;
       background-image: url('data:image/svg+xml;utf8,<svg fill="%23ff0000" height="14" viewBox="0 0 24 24" width="14" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
-      background-repeat: no-repeat; background-position: left center;
-      padding-left: 20px; line-height: 1.8; cursor: pointer;
+      background-repeat: no-repeat;
+      background-position: left center;
+      padding-left: 20px;
+      line-height: 1.8;
+      cursor: pointer;
     }
     
     .answer-select option { color: black; background: white; font-weight: normal; }
@@ -76,53 +80,50 @@
     .flex-row { display: flex; align-items: center; gap: 5px; justify-content: flex-start; direction: rtl; }
     .checkbox-group { display: inline-flex; align-items: center; gap: 3px; margin-left: 10px; direction: rtl; }
     
-    /* اصلاح تیک‌ها برای نمایش قرمز در عکس خروجی */
+    /* اصلاح رنگ تیک برای سازگاری کامل با خروجی عکس */
     input[type="checkbox"] { 
-      appearance: none;
-      -webkit-appearance: none;
-      width: 18px;
-      height: 18px;
-      border: 2px solid #555;
-      border-radius: 3px;
-      background: #fff;
-      cursor: pointer;
-      position: relative;
-      margin-left: 5px;
-    }
-    input[type="checkbox"]:checked {
-      background-color: red;
-      border-color: red;
-    }
-    input[type="checkbox"]:checked::after {
-      content: '✔';
-      position: absolute;
-      color: white;
-      font-size: 14px;
-      top: -2px;
-      right: 1px;
+      cursor: pointer; 
+      transform: scale(1.3); 
+      margin-right: 5px; 
+      accent-color: red; 
+      filter: saturate(3); /* تشدید رنگ قرمز برای اطمینان در خروجی */
     }
 
     .controls {
-      margin-top: 20px; display: flex; gap: 10px; background: #fff;
-      padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,.2);
-      width: 800px; justify-content: center; box-sizing: border-box;
+      margin-top: 20px; 
+      display: flex; 
+      gap: 10px; 
+      background: #fff;
+      padding: 15px; 
+      border-radius: 8px; 
+      box-shadow: 0 2px 5px rgba(0,0,0,.2);
+      width: 800px; 
+      justify-content: center; 
+      box-sizing: border-box;
     }
 
     button { padding: 10px 20px; cursor: pointer; border: none; border-radius: 5px; transition: .3s; font-family: Tahoma; font-weight: bold; }
     .btn-download { background: #27ae60; color: #fff; }
     .btn-backup { background: #2980b9; color: #fff; }
     .btn-restore { background: #f39c12; color: #fff; }
-    
+
+    #fileInput { display: none; }
     tr.merge-top td { border-bottom: none !important; }
     tr.merge-bottom td { border-top: none !important; }
 
-    .footer-row td { font-weight: bold; font-size: 21px; padding-top: 16px; padding-bottom: 16px; }
+    .footer-row td {
+      font-weight: bold;
+      font-size: 21px;
+      padding-top: 16px;
+      padding-bottom: 16px;
+    }
     
-    /* اصلاح نمایش اینستاگرام در خروجی */
+    /* اجبار به چپ به راست بودن اینستاگرام در همه حالات */
     #instagram { 
-      direction: ltr !important; 
-      text-align: right !important; /* متن انگلیسی اما چسبیده به سوال در سمت راست */
-      flex-grow: 1;
+        direction: ltr !important; 
+        text-align: left !important; 
+        display: inline-block;
+        unicode-bidi: bidi-override;
     }
   </style>
 </head>
@@ -145,8 +146,9 @@
       </tr>
       <tr>
         <td>
-          <div class="flex-row">تحصیلات:
-            <select id="education" class="answer-select">
+          <div class="flex-row">
+            تحصیلات:
+            <select id="education" class="answer-select" required>
               <option value="" disabled selected>انتخاب کنید</option>
               <option value="زیر دیپلم">زیر دیپلم</option>
               <option value="دیپلم">دیپلم</option>
@@ -160,8 +162,9 @@
       </tr>
       <tr>
         <td>
-          <div class="flex-row">وضعیت تأهل: 
-            <select id="marriage" class="answer-select">
+          <div class="flex-row">
+            وضعیت تأهل: 
+            <select id="marriage" class="answer-select" required>
               <option value="" disabled selected>انتخاب کنید</option>
               <option value="مجرد">مجرد</option>
               <option value="متأهل">متأهل</option>
@@ -171,8 +174,9 @@
           </div>
         </td>
         <td>
-          <div class="flex-row">تعداد فرزند:
-            <select id="children" class="answer-select">
+          <div class="flex-row">
+            تعداد فرزند:
+            <select id="children" class="answer-select" required>
               <option value="" disabled selected>انتخاب کنید</option>
               <option value="۰">۰</option><option value="۱">۱</option><option value="۲">۲</option>
               <option value="۳">۳</option><option value="۴">۴</option><option value="۵">۵</option>
@@ -218,8 +222,11 @@
       <tr><td colspan="2"><div class="flex-row">نیازهای امروزه و بزرگترین اهداف: <input type="text" id="goals"></div></td></tr>
       <tr><td colspan="2"><div class="flex-row">چالش‌های زندگی: <input type="text" id="challenges"></div></td></tr>
       <tr><td colspan="2"><div class="flex-row">اطلاعات داده شده در زنگ دعوت (دید کاری): <input type="text" id="invite_info"></div></td></tr>
-      <tr><td colspan="2"><div class="flex-row">آدرس اینستاگرام: <input type="text" id="instagram"></div></td></tr>
-      <tr><td colspan="2" style="height:auto; vertical-align:top;">توضیحات باقیمانده:<br><textarea id="final_desc"></textarea></td></tr>
+      <tr><td colspan="2"><div class="flex-row">آدرس اینستاگرام: <input type="text" id="instagram" placeholder="example_id"></div></td></tr>
+      <tr><td colspan="2" style="height:auto; min-height:100px; vertical-align:top;">
+          توضیحات باقیمانده: 
+          <textarea id="final_desc" rows="1"></textarea>
+      </td></tr>
       <tr class="footer-row">
         <td colspan="2">
           اینجانب ( <input type="text" id="footer_me" style="width:120px;"> ) درخواست تأییدیه جهت زنگ دعوت به ایشان و مشخص کردن پرزنتور از آقا / خانم ( <input type="text" id="footer_target" style="width:120px;"> ) را دارم.
@@ -229,22 +236,39 @@
   </div>
 
   <div class="controls">
-    <button class="btn-backup" onclick="saveBackup()">پشتیبان</button>
+    <button class="btn-backup" onclick="saveBackup()">پشتیبان (JSON)</button>
     <button class="btn-restore" onclick="document.getElementById('fileInput').click()">بازیابی</button>
     <button class="btn-download" onclick="downloadJPG()">دانلود JPG</button>
     <input type="file" id="fileInput" accept=".json" onchange="restoreBackup(event)">
   </div>
 
   <script>
+    // تابع کمکی برای تنظیم ارتفاع تمام textarea ها
+    function adjustAllTextareas() {
+        document.querySelectorAll('textarea').forEach(t => {
+            t.style.height = 'auto';
+            t.style.height = t.scrollHeight + 'px';
+        });
+    }
+
     function downloadJPG(){
+      // قبل از عکس گرفتن، ارتفاع باکس را بر اساس متن فیکس می‌کنیم
+      adjustAllTextareas();
+      
       const el = document.getElementById('capture-area');
-      // اسکیل بالا برای جلوگیری از تاری و بهم ریختگی
       html2canvas(el, {
         scale: 3, 
         backgroundColor: '#ffffff', 
         useCORS: true,
-        scrollY: -window.scrollY,
-        windowWidth: 800
+        letterRendering: 1,
+        onclone: (clonedDoc) => {
+            // در نسخه کلون شده (که برای عکس استفاده می‌شود) اینستاگرام را چپ‌چین نگه می‌داریم
+            const insta = clonedDoc.getElementById('instagram');
+            if(insta) {
+                insta.style.direction = 'ltr';
+                insta.style.textAlign = 'left';
+            }
+        }
       }).then(canvas => {
         const a = document.createElement('a');
         a.download = 'biography-sheet.jpg';
@@ -261,7 +285,7 @@
       const blob=new Blob([JSON.stringify(data)],{type:'application/json'});
       const url=URL.createObjectURL(blob);
       const a=document.createElement('a');
-      a.href=url; a.download='backup.json'; a.click();
+      a.href=url; a.download='backup-biography.json'; a.click();
       URL.revokeObjectURL(url);
     }
 
@@ -277,21 +301,23 @@
             if(el.type==='checkbox') el.checked=!!data[id];
             else el.value=data[id];
           }
-          // تنظیم مجدد ارتفاع متن بعد از بازیابی
-          document.querySelectorAll('textarea').forEach(t => {
-            t.style.height='auto'; t.style.height=t.scrollHeight+'px';
-          });
-          alert('بازیابی شد.');
-        }catch(err){ alert('خطا در فایل.'); }
+          adjustAllTextareas(); // بعد از بازیابی ارتفاع را تنظیم کن
+          alert('اطلاعات با موفقیت بازیابی شد.');
+        }catch(err){ alert('فایل نامعتبر است.'); }
       };
       reader.readAsText(file);
     }
 
-    // تنظیم خودکار ارتفاع باکس توضیحات
+    // تنظیم ارتفاع خودکار هنگام تایپ
     document.querySelectorAll('textarea').forEach(t=>{
-      const fit=()=>{ t.style.height='auto'; t.style.height=t.scrollHeight+'px'; };
-      t.addEventListener('input',fit); fit();
+      t.addEventListener('input', () => {
+          t.style.height = 'auto';
+          t.style.height = t.scrollHeight + 'px';
+      });
     });
+    
+    // اجرای اولیه برای تنظیم فیلدها
+    window.onload = adjustAllTextareas;
   </script>
 </body>
 </html>
