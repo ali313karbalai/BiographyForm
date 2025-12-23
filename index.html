@@ -30,7 +30,7 @@
       padding: 8px; 
       vertical-align: middle; 
       font-size: 14px; 
-      line-height: 1.8; /* حل مشکل قطع شدن پایین حروف */
+      line-height: 1.8; 
       text-align: right; 
     }
     
@@ -89,11 +89,10 @@
 
     .footer-row td { font-weight: bold; font-size: 21px; padding: 16px; }
     
-    /* تنظیمات اختصاصی اینستاگرام */
     #instagram { 
       direction: ltr !important; 
       text-align: left !important; 
-      unicode-bidi: plaintext !important; /* کمک به رندر صحیح آیدی */
+      unicode-bidi: plaintext !important;
     }
   </style>
 </head>
@@ -144,7 +143,9 @@
             <select id="children" class="answer-select" required>
               <option value="" disabled selected>انتخاب کنید</option>
               <option value="۰">۰</option><option value="۱">۱</option><option value="۲">۲</option>
-              <option value="۱۰">۱۰</option>
+              <option value="۳">۳</option><option value="۴">۴</option><option value="۵">۵</option>
+              <option value="۶">۶</option><option value="۷">۷</option><option value="۸">۸</option>
+              <option value="۹">۹</option><option value="۱۰">۱۰</option>
             </select>
           </div>
         </td>
@@ -179,16 +180,19 @@
         </div></td>
       </tr>
       <tr><td colspan="2"><div class="flex-row">سرگرمی‌های مورد علاقه: <input type="text" id="hobbies"></div></td></tr>
-      <tr><td colspan="2"><div class="flex-row">میزان آشنایی با علم روز: <input type="text" id="mlm_knowledge"></div></td></tr>
-      <tr><td colspan="2"><div class="flex-row">تاریخ آخرین دیدار: <input type="text" id="last_visit"></div></td></tr>
+      <tr><td colspan="2"><div class="flex-row">میزان آشنایی با علم روز و بازاریابی شبکه‌ای: <input type="text" id="mlm_knowledge"></div></td></tr>
+      <tr><td colspan="2"><div class="flex-row">تاریخ آخرین دیدار و علت دیدار: <input type="text" id="last_visit"></div></td></tr>
       <tr><td colspan="2"><div class="flex-row">آخرین خاطره مشترک: <input type="text" id="memory"></div></td></tr>
-      <tr><td colspan="2"><div class="flex-row">بزرگترین اهداف: <input type="text" id="goals"></div></td></tr>
+      <tr><td colspan="2"><div class="flex-row">نیازهای امروزه و بزرگترین اهداف: <input type="text" id="goals"></div></td></tr>
       <tr><td colspan="2"><div class="flex-row">چالش‌های زندگی: <input type="text" id="challenges"></div></td></tr>
-      <tr><td colspan="2"><div class="flex-row">اطلاعات زنگ دعوت: <input type="text" id="invite_info"></div></td></tr>
-      <tr><td colspan="2"><div class="flex-row">آدرس اینستاگرام: <input type="text" id="instagram" placeholder="@example"></div></td></tr>
+      <tr><td colspan="2"><div class="flex-row">اطلاعات داده شده در زنگ دعوت (دید کاری): <input type="text" id="invite_info"></div></td></tr>
+      <tr><td colspan="2"><div class="flex-row">آدرس اینستاگرام: <input type="text" id="instagram"></div></td></tr>
       <tr><td colspan="2" style="height:100px; vertical-align:top;">توضیحات باقیمانده: <textarea id="final_desc" rows="4"></textarea></td></tr>
+
       <tr class="footer-row">
-        <td colspan="2">اینجانب ( <input type="text" id="footer_me" style="width:120px;"> ) درخواست تأییدیه جهت زنگ دعوت و مشخص کردن پرزنتور را دارم.</td>
+        <td colspan="2">
+          اینجانب ( <input type="text" id="footer_me" style="width:120px;"> ) درخواست تأییدیه جهت زنگ دعوت به ایشان و مشخص کردن پرزنتور از آقا / خانم ( <input type="text" id="footer_target" style="width:120px;"> ) (اولین فالوئر) را دارم.
+        </td>
       </tr>
     </table>
   </div>
@@ -206,7 +210,6 @@
       const instaField = document.getElementById('instagram');
       const originalVal = instaField.value;
 
-      // تزریق کاراکتر نامرئی LRM برای اجبار به شروع از چپ در رندر عکس
       if(originalVal && !originalVal.startsWith('\u200E')){
           instaField.value = '\u200E' + originalVal;
       }
@@ -221,8 +224,6 @@
         a.download = 'biography-sheet.jpg';
         a.href = canvas.toDataURL('image/jpeg', 0.98);
         a.click();
-        
-        // برگرداندن به حالت اول بعد از عکس گرفتن
         instaField.value = originalVal;
       });
     }
@@ -235,7 +236,7 @@
       const blob=new Blob([JSON.stringify(data)],{type:'application/json'});
       const url=URL.createObjectURL(blob);
       const a=document.createElement('a');
-      a.href=url; a.download='backup.json'; a.click();
+      a.href=url; a.download='backup-biography.json'; a.click();
     }
 
     function restoreBackup(e){
