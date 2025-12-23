@@ -30,7 +30,7 @@
       padding: 8px; 
       vertical-align: middle; 
       font-size: 14px; 
-      line-height: 1.8; /* برای جلوگیری از قطع شدن حروف فارسی */
+      line-height: 1.8; /* حل مشکل قطع شدن پایین حروف */
       text-align: right; 
     }
     
@@ -48,19 +48,11 @@
       direction: rtl;
       width: auto; 
       flex-grow: 1;
+      line-height: 1.8;
       padding-bottom: 2px;
     }
     
     textarea { width: 100%; resize: none; overflow: hidden; display: block; }
-
-    /* استایل اختصاصی برای آدرس اینستاگرام جهت حل مشکل نمایش @ */
-    #instagram { 
-      direction: ltr !important; 
-      text-align: left !important; 
-      display: inline-block;
-      width: 100%;
-      unicode-bidi: isolate !important; /* ایزوله کردن متن برای جلوگیری از تاثیر RTL */
-    }
 
     .answer-select {
       border: none; outline: none; background: transparent;
@@ -68,30 +60,15 @@
       text-align: right; direction: rtl; width: auto; flex-grow: 1;
       appearance: none;
       background-image: url('data:image/svg+xml;utf8,<svg fill="%23ff0000" height="14" viewBox="0 0 24 24" width="14" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
-      background-repeat: no-repeat;
-      background-position: left center;
-      padding-left: 20px;
-      cursor: pointer;
+      background-repeat: no-repeat; background-position: left center;
+      padding-left: 20px; line-height: 1.8; cursor: pointer;
     }
     
-    .answer-select option { color: black; background: white; font-weight: normal; }
-
     .flex-row { display: flex; align-items: center; gap: 5px; justify-content: flex-start; direction: rtl; }
-    
-    .checkbox-group { 
-      display: inline-flex; 
-      align-items: center; 
-      gap: 4px; 
-      margin-left: 10px; 
-      direction: rtl; 
-      cursor: pointer;
-    }
+    .checkbox-group { display: inline-flex; align-items: center; gap: 4px; margin-left: 10px; cursor: pointer; }
 
-    /* تغییر رنگ متن دغدغه‌ها و ویژگی‌ها به قرمز هنگام تیک خوردن */
-    .checkbox-group:has(input:checked) {
-      color: red;
-      font-weight: bold;
-    }
+    /* قرمز شدن متن پاسخ‌ها هنگام تیک خوردن */
+    .checkbox-group:has(input:checked) { color: red; font-weight: bold; }
 
     input[type="checkbox"] { cursor: pointer; transform: scale(1.1); margin: 0; }
 
@@ -110,11 +87,13 @@
     tr.merge-top td { border-bottom: none !important; }
     tr.merge-bottom td { border-top: none !important; }
 
-    .footer-row td {
-      font-weight: bold;
-      font-size: 21px;
-      padding-top: 16px;
-      padding-bottom: 16px;
+    .footer-row td { font-weight: bold; font-size: 21px; padding: 16px; }
+    
+    /* تنظیمات اختصاصی اینستاگرام */
+    #instagram { 
+      direction: ltr !important; 
+      text-align: left !important; 
+      unicode-bidi: plaintext !important; /* کمک به رندر صحیح آیدی */
     }
   </style>
 </head>
@@ -155,10 +134,8 @@
           <div class="flex-row">وضعیت تأهل: 
             <select id="marriage" class="answer-select" required>
               <option value="" disabled selected>انتخاب کنید</option>
-              <option value="مجرد">مجرد</option>
-              <option value="متأهل">متأهل</option>
-              <option value="مطلقه">مطلقه</option>
-              <option value="بیوه">بیوه</option>
+              <option value="مجرد">مجرد</option><option value="متأهل">متأهل</option>
+              <option value="مطلقه">مطلقه</option><option value="بیوه">بیوه</option>
             </select>
           </div>
         </td>
@@ -167,9 +144,7 @@
             <select id="children" class="answer-select" required>
               <option value="" disabled selected>انتخاب کنید</option>
               <option value="۰">۰</option><option value="۱">۱</option><option value="۲">۲</option>
-              <option value="۳">۳</option><option value="۴">۴</option><option value="۵">۵</option>
-              <option value="۶">۶</option><option value="۷">۷</option><option value="۸">۸</option>
-              <option value="۹">۹</option><option value="۱۰">۱۰</option>
+              <option value="۱۰">۱۰</option>
             </select>
           </div>
         </td>
@@ -204,24 +179,22 @@
         </div></td>
       </tr>
       <tr><td colspan="2"><div class="flex-row">سرگرمی‌های مورد علاقه: <input type="text" id="hobbies"></div></td></tr>
-      <tr><td colspan="2"><div class="flex-row">میزان آشنایی با علم روز و بازاریابی شبکه‌ای: <input type="text" id="mlm_knowledge"></div></td></tr>
-      <tr><td colspan="2"><div class="flex-row">تاریخ آخرین دیدار و علت دیدار: <input type="text" id="last_visit"></div></td></tr>
+      <tr><td colspan="2"><div class="flex-row">میزان آشنایی با علم روز: <input type="text" id="mlm_knowledge"></div></td></tr>
+      <tr><td colspan="2"><div class="flex-row">تاریخ آخرین دیدار: <input type="text" id="last_visit"></div></td></tr>
       <tr><td colspan="2"><div class="flex-row">آخرین خاطره مشترک: <input type="text" id="memory"></div></td></tr>
-      <tr><td colspan="2"><div class="flex-row">نیازهای امروزه و بزرگترین اهداف: <input type="text" id="goals"></div></td></tr>
+      <tr><td colspan="2"><div class="flex-row">بزرگترین اهداف: <input type="text" id="goals"></div></td></tr>
       <tr><td colspan="2"><div class="flex-row">چالش‌های زندگی: <input type="text" id="challenges"></div></td></tr>
-      <tr><td colspan="2"><div class="flex-row">اطلاعات داده شده در زنگ دعوت (دید کاری): <input type="text" id="invite_info"></div></td></tr>
+      <tr><td colspan="2"><div class="flex-row">اطلاعات زنگ دعوت: <input type="text" id="invite_info"></div></td></tr>
       <tr><td colspan="2"><div class="flex-row">آدرس اینستاگرام: <input type="text" id="instagram" placeholder="@example"></div></td></tr>
       <tr><td colspan="2" style="height:100px; vertical-align:top;">توضیحات باقیمانده: <textarea id="final_desc" rows="4"></textarea></td></tr>
       <tr class="footer-row">
-        <td colspan="2">
-          اینجانب ( <input type="text" id="footer_me" style="width:120px;"> ) درخواست تأییدیه جهت زنگ دعوت به ایشان و مشخص کردن پرزنتور از آقا / خانم ( <input type="text" id="footer_target" style="width:120px;"> ) را دارم.
-        </td>
+        <td colspan="2">اینجانب ( <input type="text" id="footer_me" style="width:120px;"> ) درخواست تأییدیه جهت زنگ دعوت و مشخص کردن پرزنتور را دارم.</td>
       </tr>
     </table>
   </div>
 
   <div class="controls">
-    <button class="btn-backup" onclick="saveBackup()">پشتیبان (JSON)</button>
+    <button class="btn-backup" onclick="saveBackup()">پشتیبان</button>
     <button class="btn-restore" onclick="document.getElementById('fileInput').click()">بازیابی</button>
     <button class="btn-download" onclick="downloadJPG()">دانلود JPG</button>
     <input type="file" id="fileInput" accept=".json" onchange="restoreBackup(event)">
@@ -230,13 +203,28 @@
   <script>
     function downloadJPG(){
       const el = document.getElementById('capture-area');
-      html2canvas(el, { scale: 3, backgroundColor: '#ffffff', useCORS: true, letterRendering: 1 })
-        .then(canvas => {
-          const a = document.createElement('a');
-          a.download = 'biography-sheet.jpg';
-          a.href = canvas.toDataURL('image/jpeg', 0.98);
-          a.click();
-        });
+      const instaField = document.getElementById('instagram');
+      const originalVal = instaField.value;
+
+      // تزریق کاراکتر نامرئی LRM برای اجبار به شروع از چپ در رندر عکس
+      if(originalVal && !originalVal.startsWith('\u200E')){
+          instaField.value = '\u200E' + originalVal;
+      }
+
+      html2canvas(el, {
+        scale: 3, 
+        backgroundColor: '#ffffff', 
+        useCORS: true,
+        letterRendering: 1
+      }).then(canvas => {
+        const a = document.createElement('a');
+        a.download = 'biography-sheet.jpg';
+        a.href = canvas.toDataURL('image/jpeg', 0.98);
+        a.click();
+        
+        // برگرداندن به حالت اول بعد از عکس گرفتن
+        instaField.value = originalVal;
+      });
     }
 
     function saveBackup(){
@@ -247,24 +235,21 @@
       const blob=new Blob([JSON.stringify(data)],{type:'application/json'});
       const url=URL.createObjectURL(blob);
       const a=document.createElement('a');
-      a.href=url; a.download='backup-biography.json'; a.click();
-      URL.revokeObjectURL(url);
+      a.href=url; a.download='backup.json'; a.click();
     }
 
     function restoreBackup(e){
       const file=e.target.files[0]; if(!file) return;
       const reader=new FileReader();
       reader.onload=(ev)=>{
-        try{
-          const data=JSON.parse(ev.target.result);
-          for(const id in data){
-            const el=document.getElementById(id);
-            if(!el) continue;
+        const data=JSON.parse(ev.target.result);
+        for(const id in data){
+          const el=document.getElementById(id);
+          if(el) {
             if(el.type==='checkbox') el.checked=!!data[id];
             else el.value=data[id];
           }
-          alert('اطلاعات با موفقیت بازیابی شد.');
-        }catch(err){ alert('فایل نامعتبر است.'); }
+        }
       };
       reader.readAsText(file);
     }
