@@ -48,6 +48,7 @@
       direction: rtl;
       width: auto; 
       flex-grow: 1;
+      line-height: 1.8;
     }
     
     textarea { width: 100%; resize: none; overflow: hidden; display: block; }
@@ -76,16 +77,17 @@
     button { padding: 10px 20px; cursor: pointer; border: none; border-radius: 5px; font-family: Tahoma; font-weight: bold; }
     .btn-download { background: #27ae60; color: #fff; }
 
-    /* اصلاح نهایی سطر آخر */
+    /* استایل اصلاح شده سطر آخر با عرض ۱۱۰ پیکسل */
     .footer-row td { 
       font-weight: bold; 
       font-size: 20px; 
-      padding: 18px 8px; 
-      white-space: nowrap; /* جلوگیری از شکستن خط برای جا شدن پرزنتور */
+      padding: 15px 5px; 
+      line-height: 1.2; 
+      letter-spacing: -0.5px; /* فشرده‌سازی جزئی برای جا شدن کلمه پرزنتور */
     }
     
     .footer-input {
-      width: 120px !important; /* بازگشت به ۱۲۰ پیکسل طبق درخواست شما */
+      width: 110px !important; /* بازگشت به ۱۱۰ پیکسل طبق درخواست شما */
       text-align: center !important; 
       font-size: 20px !important;
       padding: 0 !important;
@@ -141,14 +143,12 @@
             <select id="children" class="answer-select">
               <option value="" disabled selected>انتخاب کنید</option>
               <option>۰</option><option>۱</option><option>۲</option><option>۳</option><option>۴</option><option>۵</option>
-              <option>۶</option><option>۷</option><option>۸</option><option>۹</option><option>۱۰</option>
             </select>
           </div>
         </td>
       </tr>
       <tr><td colspan="2"><div class="flex-row">شغل فعلی و سابقه مشاغل قبلی: <input type="text" id="job_history"></div></td></tr>
       <tr><td colspan="2"><div class="flex-row">میزان درآمد: <input type="text" id="income"></div></td></tr>
-      
       <tr class="merge-top">
         <td colspan="2"><div class="flex-row">دغدغه فعلی:
             <label class="checkbox-group">درآمد<input type="checkbox" id="d_daramad"></label>
@@ -158,7 +158,6 @@
         </div></td>
       </tr>
       <tr class="merge-bottom"><td colspan="2"><div class="flex-row">توضیحات بیشتر: <input type="text" id="desc1"></div></td></tr>
-
       <tr class="merge-top">
         <td colspan="2"><div class="flex-row" style="flex-wrap:wrap;">ویژگی‌های شخصیتی:
             <label class="checkbox-group">اجتماعی<input type="checkbox" id="v_ejtemai"></label>
@@ -177,7 +176,6 @@
             توضیحات بیشتر: <input type="text" id="desc2">
         </div></td>
       </tr>
-
       <tr><td colspan="2"><div class="flex-row">سرگرمی‌های مورد علاقه: <input type="text" id="hobbies"></div></td></tr>
       <tr><td colspan="2"><div class="flex-row">میزان آشنایی با علم روز و بازاریابی شبکه‌ای: <input type="text" id="mlm_knowledge"></div></td></tr>
       <tr><td colspan="2"><div class="flex-row">تاریخ آخرین دیدار و علت دیدار: <input type="text" id="last_visit"></div></td></tr>
