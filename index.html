@@ -37,10 +37,19 @@
     .header-cell { text-align: center; font-weight: bold; font-size: 20px; padding: 15px; }
 
     input[type="text"], textarea {
-      border: none; outline: none; background: transparent;
-      color: red; font-size: 15px; font-weight: bold; font-family: Tahoma, sans-serif;
-      text-align: right; direction: rtl; width: auto; flex-grow: 1;
-      line-height: 1.8; padding-bottom: 2px;
+      border: none; 
+      outline: none; 
+      background: transparent;
+      color: red; 
+      font-size: 15px; 
+      font-weight: bold; 
+      font-family: Tahoma, sans-serif;
+      text-align: right; 
+      direction: rtl;
+      width: auto; 
+      flex-grow: 1;
+      line-height: 1.8;
+      padding-bottom: 2px;
     }
     
     textarea { width: 100%; resize: none; overflow: hidden; display: block; }
@@ -57,7 +66,9 @@
     
     .flex-row { display: flex; align-items: center; gap: 5px; justify-content: flex-start; direction: rtl; }
     .checkbox-group { display: inline-flex; align-items: center; gap: 4px; margin-left: 10px; cursor: pointer; }
+
     .checkbox-group:has(input:checked) { color: red; font-weight: bold; }
+
     input[type="checkbox"] { cursor: pointer; transform: scale(1.1); margin: 0; }
 
     .controls {
@@ -75,23 +86,24 @@
     tr.merge-top td { border-bottom: none !important; }
     tr.merge-bottom td { border-top: none !important; }
 
-    /* اصلاحات سطر آخر طبق درخواست جدید */
+    /* استایل سطر آخر و فیلدهای داخل پرانتز */
     .footer-row td { 
       font-weight: bold; 
       font-size: 20px; 
       padding: 18px 8px; 
-      line-height: 2; /* فاصله بین دو سطر فوتر */
     }
     
     .footer-input {
-      width: 180px; /* هم‌اندازه کردن هر دو کادر */
+      width: 110px; /* کاهش عرض برای کشیدن کلمه پرزنتور به سطر اول */
       text-align: center !important; 
       font-size: 20px !important;
-      color: red;
-      font-weight: bold;
     }
     
-    #instagram { direction: ltr !important; text-align: left !important; unicode-bidi: plaintext !important; }
+    #instagram { 
+      direction: ltr !important; 
+      text-align: left !important; 
+      unicode-bidi: plaintext !important;
+    }
   </style>
 </head>
 <body>
@@ -189,8 +201,7 @@
 
       <tr class="footer-row">
         <td colspan="2">
-          اینجانب (<input type="text" id="footer_me" class="footer-input">) درخواست تأییدیه جهت زنگ دعوت به ایشان و مشخص کردن پرزنتور<br>
-          از آقا / خانم (<input type="text" id="footer_target" class="footer-input">) (اولین فالوئر) را دارم.
+          اینجانب ( <input type="text" id="footer_me" class="footer-input"> ) درخواست تأییدیه جهت زنگ دعوت به ایشان و مشخص کردن پرزنتور از آقا / خانم ( <input type="text" id="footer_target" class="footer-input"> ) (اولین فالوئر) را دارم.
         </td>
       </tr>
     </table>
@@ -208,10 +219,16 @@
       const el = document.getElementById('capture-area');
       const instaField = document.getElementById('instagram');
       const originalVal = instaField.value;
-      if(originalVal && !originalVal.startsWith('\u200E')) instaField.value = '\u200E' + originalVal;
+
+      if(originalVal && !originalVal.startsWith('\u200E')){
+          instaField.value = '\u200E' + originalVal;
+      }
 
       html2canvas(el, {
-        scale: 3, backgroundColor: '#ffffff', useCORS: true, letterRendering: 1
+        scale: 3, 
+        backgroundColor: '#ffffff', 
+        useCORS: true,
+        letterRendering: 1
       }).then(canvas => {
         const a = document.createElement('a');
         a.download = 'biography-sheet.jpg';
