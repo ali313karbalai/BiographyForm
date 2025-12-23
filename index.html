@@ -6,79 +6,113 @@
   <title>برگه بیوگرافی</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
-    body{
+    body {
       font-family: Tahoma, Arial, sans-serif;
-      background:#f0f0f0;
-      display:flex; flex-direction:column; align-items:center;
-      padding:20px;
+      background: #f0f0f0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
       margin: 0;
     }
-    #capture-area{
-      background:#fff;
-      width:800px;
-      padding:20px;
-      border:2px solid #000;
-      box-shadow:0 0 10px rgba(0,0,0,.1);
-    }
-    table{ width:100%; border-collapse:collapse; border:2px solid #000; }
-    td{ border:1px solid #000; padding:8px; vertical-align:middle; font-size:14px; line-height:1.6; text-align: right; }
-    .header-cell{ text-align:center; font-weight:bold; font-size:20px; padding:15px; }
 
-    /* سایز فونت پاسخ‌ها روی 15 تنظیم شد */
-    input[type="text"], textarea{
-      border:none; outline:none; background:transparent;
-      color:red; 
-      font-size:15px; 
+    #capture-area {
+      background: #fff;
+      width: 800px;
+      padding: 20px;
+      border: 2px solid #000;
+      box-shadow: 0 0 10px rgba(0,0,0,.1);
+    }
+
+    table { width: 100%; border-collapse: collapse; border: 2px solid #000; }
+    td { 
+      border: 1px solid #000; 
+      padding: 8px; 
+      vertical-align: middle; 
+      font-size: 14px; 
+      line-height: 1.6; 
+      text-align: right; 
+    }
+    
+    .header-cell { text-align: center; font-weight: bold; font-size: 20px; padding: 15px; }
+
+    /* استایل فیلدها برای جلوگیری از قطع شدن حروف و راست‌چین شدن */
+    input[type="text"], textarea {
+      border: none; 
+      outline: none; 
+      background: transparent;
+      color: red; 
+      font-size: 15px; 
       font-weight: bold; 
       font-family: Tahoma, sans-serif;
-      text-align: right;
+      text-align: right; 
       direction: rtl;
-      width:auto; flex-grow:1;
+      width: auto; 
+      flex-grow: 1;
+      line-height: 1.8; /* فضای کافی برای زیر حروف فارسی */
+      padding-bottom: 2px;
     }
-    textarea{ width:100%; resize:none; overflow:hidden; display: block; }
+    
+    textarea { width: 100%; resize: none; overflow: hidden; display: block; }
 
     .answer-select {
-      border: none; outline: none; background: transparent;
+      border: none; 
+      outline: none; 
+      background: transparent;
       color: red;
       font-size: 15px; 
       font-weight: bold; 
       font-family: Tahoma, sans-serif;
       text-align: right;
       direction: rtl;
-      width: auto; flex-grow: 1;
+      width: auto; 
+      flex-grow: 1;
       appearance: none;
       background-image: url('data:image/svg+xml;utf8,<svg fill="%23ff0000" height="14" viewBox="0 0 24 24" width="14" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
       background-repeat: no-repeat;
       background-position: left center;
       padding-left: 20px;
+      line-height: 1.8;
       cursor: pointer;
     }
+    
     .answer-select option { color: black; background: white; font-weight: normal; }
-    
-    .flex-row{ display:flex; align-items:center; gap:5px; justify-content: flex-start; direction: rtl; }
-    .checkbox-group{ display:inline-flex; align-items:center; gap:3px; margin-left:10px; direction: rtl; }
-    input[type="checkbox"]{ cursor:pointer; transform: scale(1.2); margin-right: 5px; }
 
-    .controls{
-      margin-top:20px; display:flex; gap:10px; background:#fff;
-      padding:15px; border-radius:8px; box-shadow:0 2px 5px rgba(0,0,0,.2);
-      width: 800px; justify-content: center; box-sizing: border-box;
-    }
-    button{ padding:10px 20px; cursor:pointer; border:none; border-radius:5px; transition:.3s; font-family:Tahoma; font-weight: bold; }
-    .btn-download{ background:#27ae60; color:#fff; }
-    .btn-backup{ background:#2980b9; color:#fff; }
-    .btn-restore{ background:#f39c12; color:#fff; }
-    
-    tr.merge-top td{ border-bottom:none !important; }
-    tr.merge-bottom td{ border-top:none !important; }
+    .flex-row { display: flex; align-items: center; gap: 5px; justify-content: flex-start; direction: rtl; }
+    .checkbox-group { display: inline-flex; align-items: center; gap: 3px; margin-left: 10px; direction: rtl; }
+    input[type="checkbox"] { cursor: pointer; transform: scale(1.2); margin-right: 5px; }
 
-    .footer-row td{
-      font-weight:bold;
-      font-size:21px;
-      padding-top:16px;
-      padding-bottom:16px;
+    .controls {
+      margin-top: 20px; 
+      display: flex; 
+      gap: 10px; 
+      background: #fff;
+      padding: 15px; 
+      border-radius: 8px; 
+      box-shadow: 0 2px 5px rgba(0,0,0,.2);
+      width: 800px; 
+      justify-content: center; 
+      box-sizing: border-box;
+    }
+
+    button { padding: 10px 20px; cursor: pointer; border: none; border-radius: 5px; transition: .3s; font-family: Tahoma; font-weight: bold; }
+    .btn-download { background: #27ae60; color: #fff; }
+    .btn-backup { background: #2980b9; color: #fff; }
+    .btn-restore { background: #f39c12; color: #fff; }
+    button:hover { opacity: .85; }
+
+    #fileInput { display: none; }
+    tr.merge-top td { border-bottom: none !important; }
+    tr.merge-bottom td { border-top: none !important; }
+
+    .footer-row td {
+      font-weight: bold;
+      font-size: 21px;
+      padding-top: 16px;
+      padding-bottom: 16px;
     }
     
+    /* تنظیم اختصاصی برای آیدی اینستاگرام */
     #instagram { direction: ltr; text-align: left; }
   </style>
 </head>
@@ -87,18 +121,22 @@
   <div id="capture-area">
     <table>
       <tr><td colspan="2" class="header-cell">برگه بیوگرافی</td></tr>
+
       <tr>
         <td width="50%"><div class="flex-row">نام و نام خانوادگی معرف: <input type="text" id="moaref_name"></div></td>
         <td width="50%"><div class="flex-row">نام و نام خانوادگی پراسپکت: <input type="text" id="prospect_name"></div></td>
       </tr>
+
       <tr>
         <td><div class="flex-row">ساعت دقیق و تاریخ پرزنت: <input type="text" id="present_date"></div></td>
         <td><div class="flex-row">سن پراسپکت: <input type="text" id="prospect_age"></div></td>
       </tr>
+
       <tr>
         <td><div class="flex-row">مکان پرزنت: <input type="text" id="present_location"></div></td>
         <td><div class="flex-row">نسبت با معرف: <input type="text" id="relation"></div></td>
       </tr>
+
       <tr>
         <td>
           <div class="flex-row">
@@ -115,6 +153,7 @@
         </td>
         <td><div class="flex-row">رشته تحصیلی: <input type="text" id="major"></div></td>
       </tr>
+
       <tr>
         <td>
           <div class="flex-row">
@@ -141,16 +180,22 @@
           </div>
         </td>
       </tr>
+
       <tr><td colspan="2"><div class="flex-row">شغل فعلی و سابقه مشاغل قبلی: <input type="text" id="job_history"></div></td></tr>
       <tr><td colspan="2"><div class="flex-row">میزان درآمد: <input type="text" id="income"></div></td></tr>
-      <tr class="merge-top"><td colspan="2"><div class="flex-row">دغدغه فعلی:
+
+      <tr class="merge-top">
+        <td colspan="2"><div class="flex-row">دغدغه فعلی:
             <span class="checkbox-group">درآمد<input type="checkbox" id="d_daramad"></span>
             <span class="checkbox-group">زمان<input type="checkbox" id="d_zaman"></span>
             <span class="checkbox-group">پیشرفت<input type="checkbox" id="d_pishraft"></span>
             <span class="checkbox-group">امنیت شغلی<input type="checkbox" id="d_amniat"></span>
-      </div></td></tr>
+        </div></td>
+      </tr>
       <tr class="merge-bottom"><td colspan="2"><div class="flex-row">توضیحات بیشتر: <input type="text" id="desc1"></div></td></tr>
-      <tr class="merge-top"><td colspan="2"><div class="flex-row" style="flex-wrap:wrap;">ویژگی‌های شخصیتی:
+
+      <tr class="merge-top">
+        <td colspan="2"><div class="flex-row" style="flex-wrap:wrap;">ویژگی‌های شخصیتی:
             <span class="checkbox-group">اجتماعی<input type="checkbox" id="v_ejtemai"></span>
             <span class="checkbox-group">ریسک‌پذیر<input type="checkbox" id="v_risk"></span>
             <span class="checkbox-group">مستقل<input type="checkbox" id="v_mostaghel"></span>
@@ -158,12 +203,16 @@
             <span class="checkbox-group">رُک<input type="checkbox" id="v_rok"></span>
             <span class="checkbox-group">شکاک<input type="checkbox" id="v_shakak"></span>
             <span class="checkbox-group">رفیق‌باز<input type="checkbox" id="v_rafigh"></span>
-      </div></td></tr>
-      <tr class="merge-bottom"><td colspan="2"><div class="flex-row">
+        </div></td>
+      </tr>
+      <tr class="merge-bottom">
+        <td colspan="2"><div class="flex-row">
             <span class="checkbox-group">خواستار تجربه‌های تازه<input type="checkbox" id="exp_new"></span>
             <span class="checkbox-group">اهمیت‌دهنده به حرف اطرافیان<input type="checkbox" id="atrafian"></span>
             توضیحات بیشتر: <input type="text" id="desc2">
-      </div></td></tr>
+        </div></td>
+      </tr>
+
       <tr><td colspan="2"><div class="flex-row">سرگرمی‌های مورد علاقه: <input type="text" id="hobbies"></div></td></tr>
       <tr><td colspan="2"><div class="flex-row">میزان آشنایی با علم روز و بازاریابی شبکه‌ای: <input type="text" id="mlm_knowledge"></div></td></tr>
       <tr><td colspan="2"><div class="flex-row">تاریخ آخرین دیدار و علت دیدار: <input type="text" id="last_visit"></div></td></tr>
@@ -173,6 +222,7 @@
       <tr><td colspan="2"><div class="flex-row">اطلاعات داده شده در زنگ دعوت (دید کاری): <input type="text" id="invite_info"></div></td></tr>
       <tr><td colspan="2"><div class="flex-row">آدرس اینستاگرام: <input type="text" id="instagram"></div></td></tr>
       <tr><td colspan="2" style="height:100px; vertical-align:top;">توضیحات باقیمانده: <textarea id="final_desc" rows="4"></textarea></td></tr>
+
       <tr class="footer-row">
         <td colspan="2">
           اینجانب ( <input type="text" id="footer_me" style="width:120px;"> ) درخواست تأییدیه جهت زنگ دعوت به ایشان و مشخص کردن پرزنتور از آقا / خانم ( <input type="text" id="footer_target" style="width:120px;"> ) را دارم.
@@ -191,13 +241,18 @@
   <script>
     function downloadJPG(){
       const el = document.getElementById('capture-area');
-      html2canvas(el, {scale:3, backgroundColor:'#ffffff', useCORS:true})
-        .then(canvas=>{
-          const a=document.createElement('a');
-          a.download='biography-sheet.jpg';
-          a.href=canvas.toDataURL('image/jpeg',0.95);
-          a.click();
-        });
+      // افزایش اسکیل برای کیفیت عالی و رندر بهتر حروف
+      html2canvas(el, {
+        scale: 3, 
+        backgroundColor: '#ffffff', 
+        useCORS: true,
+        letterRendering: 1
+      }).then(canvas => {
+        const a = document.createElement('a');
+        a.download = 'biography-sheet.jpg';
+        a.href = canvas.toDataURL('image/jpeg', 0.98);
+        a.click();
+      });
     }
 
     function saveBackup(){
