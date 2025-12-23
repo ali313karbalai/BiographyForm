@@ -122,7 +122,6 @@
               <option value="لیسانس">لیسانس</option>
               <option value="فوق لیسانس">فوق لیسانس</option>
               <option value="دکتری">دکتری</option>
-              <option value="نمی‌دانم">نمی‌دانم</option>
             </select>
           </div>
         </td>
@@ -135,7 +134,6 @@
               <option value="" disabled selected>انتخاب کنید</option>
               <option value="مجرد">مجرد</option><option value="متأهل">متأهل</option>
               <option value="مطلقه">مطلقه</option><option value="بیوه">بیوه</option>
-              <option value="نمی‌دانم">نمی‌دانم</option>
             </select>
           </div>
         </td>
@@ -144,8 +142,9 @@
             <select id="children" class="answer-select" required>
               <option value="" disabled selected>انتخاب کنید</option>
               <option value="۰">۰</option><option value="۱">۱</option><option value="۲">۲</option>
-              <option value="۳">۳</option><option value="۴">۴</option>
-              <option value=" بیشتر از ۴">بیشتر از ۴</option><option value="نمی‌دانم">نمی‌دانم</option>
+              <option value="۳">۳</option><option value="۴">۴</option><option value="۵">۵</option>
+              <option value="۶">۶</option><option value="۷">۷</option><option value="۸">۸</option>
+              <option value="۹">۹</option><option value="۱۰">۱۰</option>
             </select>
           </div>
         </td>
@@ -209,6 +208,7 @@
       const el = document.getElementById('capture-area');
       const instaField = document.getElementById('instagram');
       const finalDesc = document.getElementById('final_desc');
+      const prospectName = document.getElementById('prospect_name').value.trim();
       
       const originalInsta = instaField.value;
       const originalDesc = finalDesc.value;
@@ -218,7 +218,7 @@
           instaField.value = '\u200E' + originalInsta;
       }
 
-      // ۲. ترفند نمایش کامل چند سطر توضیحات در عکس
+      // ۲. ترفند نمایش کامل چند سطر توضیحات
       const descReplacement = document.createElement('div');
       descReplacement.innerText = originalDesc;
       descReplacement.style.whiteSpace = 'pre-wrap';
@@ -233,6 +233,9 @@
       finalDesc.style.display = 'none';
       finalDesc.parentNode.appendChild(descReplacement);
 
+      // نام‌گذاری فایل خروجی عکس بر اساس نام پراسپکت
+      const jpgFileName = prospectName ? `بیوگرافی ${prospectName}.jpg` : 'biography-sheet.jpg';
+
       html2canvas(el, {
         scale: 3, 
         backgroundColor: '#ffffff', 
@@ -240,7 +243,7 @@
         letterRendering: 1
       }).then(canvas => {
         const a = document.createElement('a');
-        a.download = 'biography-sheet.jpg';
+        a.download = jpgFileName;
         a.href = canvas.toDataURL('image/jpeg', 0.98);
         a.click();
         
@@ -255,10 +258,17 @@
       document.querySelectorAll('input, textarea, select').forEach(el=>{
         data[el.id] = (el.type==='checkbox') ? el.checked : el.value;
       });
+
+      // گرفتن نام پراسپکت برای نام‌گذاری فایل پشتیبان
+      const prospectName = document.getElementById('prospect_name').value.trim();
+      const backupFileName = prospectName ? `بیوگرافی ${prospectName}.json` : 'backup-biography.json';
+
       const blob=new Blob([JSON.stringify(data)],{type:'application/json'});
       const url=URL.createObjectURL(blob);
       const a=document.createElement('a');
-      a.href=url; a.download='backup-biography.json'; a.click();
+      a.href=url; 
+      a.download = backupFileName;
+      a.click();
     }
 
     function restoreBackup(e){
