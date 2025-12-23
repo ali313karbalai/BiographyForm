@@ -76,21 +76,25 @@
 
     button { padding: 10px 20px; cursor: pointer; border: none; border-radius: 5px; font-family: Tahoma; font-weight: bold; }
     .btn-download { background: #27ae60; color: #fff; }
+    .btn-backup { background: #2980b9; color: #fff; }
+    .btn-restore { background: #f39c12; color: #fff; }
 
-    /* استایل اصلاح شده سطر آخر */
+    #fileInput { display: none; }
+    tr.merge-top td { border-bottom: none !important; }
+    tr.merge-bottom td { border-top: none !important; }
+
     .footer-row td { 
       font-weight: bold; 
       font-size: 20px; 
-      padding: 15px 8px; 
-      line-height: 1.4; /* کاهش فاصله بین خطوط برای جا شدن بهتر */
+      padding: 18px 8px; 
+      line-height: 1.5; 
     }
     
     .footer-input {
-      width: 60px !important; /* بسیار کوتاه برای جا شدن کلمه پرزنتور در خط اول */
+      width: 100px !important; /* تنظیم دقیق روی ۱۰۰ پیکسل بر اساس درخواست شما */
       text-align: center !important; 
       font-size: 20px !important;
       padding: 0 !important;
-      margin: 0 2px;
     }
     
     #instagram { 
@@ -148,6 +152,7 @@
       </tr>
       <tr><td colspan="2"><div class="flex-row">شغل فعلی و سابقه مشاغل قبلی: <input type="text" id="job_history"></div></td></tr>
       <tr><td colspan="2"><div class="flex-row">میزان درآمد: <input type="text" id="income"></div></td></tr>
+      
       <tr class="merge-top">
         <td colspan="2"><div class="flex-row">دغدغه فعلی:
             <label class="checkbox-group">درآمد<input type="checkbox" id="d_daramad"></label>
@@ -157,6 +162,7 @@
         </div></td>
       </tr>
       <tr class="merge-bottom"><td colspan="2"><div class="flex-row">توضیحات بیشتر: <input type="text" id="desc1"></div></td></tr>
+      
       <tr class="merge-top">
         <td colspan="2"><div class="flex-row" style="flex-wrap:wrap;">ویژگی‌های شخصیتی:
             <label class="checkbox-group">اجتماعی<input type="checkbox" id="v_ejtemai"></label>
@@ -175,6 +181,7 @@
             توضیحات بیشتر: <input type="text" id="desc2">
         </div></td>
       </tr>
+      
       <tr><td colspan="2"><div class="flex-row">سرگرمی‌های مورد علاقه: <input type="text" id="hobbies"></div></td></tr>
       <tr><td colspan="2"><div class="flex-row">میزان آشنایی با علم روز و بازاریابی شبکه‌ای: <input type="text" id="mlm_knowledge"></div></td></tr>
       <tr><td colspan="2"><div class="flex-row">تاریخ آخرین دیدار و علت دیدار: <input type="text" id="last_visit"></div></td></tr>
@@ -194,7 +201,10 @@
   </div>
 
   <div class="controls">
+    <button class="btn-backup" onclick="saveBackup()">پشتیبان (JSON)</button>
+    <button class="btn-restore" onclick="document.getElementById('fileInput').click()">بازیابی</button>
     <button class="btn-download" onclick="downloadJPG()">دانلود JPG</button>
+    <input type="file" id="fileInput" accept=".json" onchange="restoreBackup(event)">
   </div>
 
   <script>
@@ -204,13 +214,40 @@
       const originalVal = instaField.value;
       if(originalVal && !originalVal.startsWith('\u200E')){ instaField.value = '\u200E' + originalVal; }
 
-      html2canvas(el, { scale: 3, backgroundColor: '#ffffff' }).then(canvas => {
+      html2canvas(el, { scale: 3, backgroundColor: '#ffffff', useCORS: true }).then(canvas => {
         const a = document.createElement('a');
         a.download = 'biography.jpg';
         a.href = canvas.toDataURL('image/jpeg', 0.98);
         a.click();
         instaField.value = originalVal;
       });
+    }
+
+    function saveBackup(){
+      const data={};
+      document.querySelectorAll('input, textarea, select').forEach(el=>{
+        data[el.id] = (el.type==='checkbox') ? el.checked : el.value;
+      });
+      const blob=new Blob([JSON.stringify(data)],{type:'application/json'});
+      const url=URL.createObjectURL(blob);
+      const a=document.createElement('a');
+      a.href=url; a.download='backup.json'; a.click();
+    }
+
+    function restoreBackup(e){
+      const file=e.target.files[0]; if(!file) return;
+      const reader=new FileReader();
+      reader.onload=(ev)=>{
+        const data=JSON.parse(ev.target.result);
+        for(const id in data){
+          const el=document.getElementById(id);
+          if(el) {
+            if(el.type==='checkbox') el.checked=!!data[id];
+            else el.value=data[id];
+          }
+        }
+      };
+      reader.readAsText(file);
     }
 
     document.querySelectorAll('textarea').forEach(t=>{
