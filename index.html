@@ -6,12 +6,11 @@
   <title>برگه بیوگرافی</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
-    /* تنظیمات پایه برای جلوگیری از بیرون‌زدگی */
     html, body {
       margin: 0;
       padding: 0;
       width: 100%;
-      overflow-x: auto; /* اجازه اسکرول افقی در صورت نیاز */
+      overflow-x: auto;
       background: #f0f0f0;
     }
 
@@ -20,16 +19,15 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 20px 0; /* فاصله از بالا و پایین */
+      padding: 20px 0;
     }
 
-    /* محفظه اصلی برای نگهداری فرم در وسط */
     .outer-wrapper {
       display: flex;
       flex-direction: column;
       align-items: center;
       width: 100%;
-      min-width: 820px; /* کمی بیشتر از عرض فرم برای حاشیه امن */
+      min-width: 820px;
     }
 
     #capture-area {
@@ -38,7 +36,7 @@
       padding: 20px;
       border: 2px solid #000;
       box-shadow: 0 0 10px rgba(0,0,0,.1);
-      box-sizing: border-box; /* جلوگیری از تاثیر پدینگ روی عرض کل */
+      box-sizing: border-box;
     }
 
     table { width: 100%; border-collapse: collapse; border: 2px solid #000; }
@@ -53,6 +51,16 @@
     
     .header-cell { text-align: center; font-weight: bold; font-size: 20px; padding: 15px; }
 
+    /* اصلاح برای جلوگیری از دو سطری شدن برچسب‌ها */
+    .flex-row { 
+      display: flex; 
+      align-items: center; 
+      gap: 5px; 
+      justify-content: flex-start; 
+      direction: rtl;
+      white-space: nowrap; /* مانع از شکستن متن برچسب می‌شود */
+    }
+
     input[type="text"], textarea {
       border: none; 
       outline: none; 
@@ -63,23 +71,27 @@
       font-family: Tahoma, sans-serif;
       text-align: right; 
       direction: rtl;
-      width: auto; 
+      width: 100%; /* فضا را کامل پر می‌کند */
       flex-grow: 1;
       line-height: 1.8;
     }
     
     textarea { width: 100%; resize: none; overflow: hidden; display: block; }
 
+    /* اصلاح عرض لیست‌های کشویی */
     .answer-select {
       border: none; outline: none; background: transparent;
       color: red; font-size: 15px; font-weight: bold; font-family: Tahoma, sans-serif;
       appearance: none;
       background-image: url('data:image/svg+xml;utf8,<svg fill="%23ff0000" height="14" viewBox="0 0 24 24" width="14" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
-      background-repeat: no-repeat; background-position: left center;
-      padding-left: 20px; cursor: pointer;
+      background-repeat: no-repeat; 
+      background-position: left center;
+      padding-left: 25px; 
+      cursor: pointer;
+      min-width: 100px; /* حداقل عرض برای جلوگیری از چسبیدن فلش */
+      flex-grow: 1;
     }
     
-    .flex-row { display: flex; align-items: center; gap: 5px; justify-content: flex-start; direction: rtl; }
     .checkbox-group { display: inline-flex; align-items: center; gap: 4px; margin-left: 10px; cursor: pointer; }
     .checkbox-group:has(input:checked) { color: red; font-weight: bold; }
     input[type="checkbox"] { cursor: pointer; transform: scale(1.1); margin: 0; }
