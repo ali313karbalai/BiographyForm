@@ -2,18 +2,34 @@
 <html lang="fa" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=800">
+  <meta name="viewport" content="width=800, user-scalable=yes">
   <title>برگه بیوگرافی</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
+    /* تنظیمات پایه برای جلوگیری از بیرون‌زدگی */
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      overflow-x: auto; /* اجازه اسکرول افقی در صورت نیاز */
+      background: #f0f0f0;
+    }
+
     body {
       font-family: Tahoma, Arial, sans-serif;
-      background: #f0f0f0;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 20px;
-      margin: 0;
+      padding: 20px 0; /* فاصله از بالا و پایین */
+    }
+
+    /* محفظه اصلی برای نگهداری فرم در وسط */
+    .outer-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      min-width: 820px; /* کمی بیشتر از عرض فرم برای حاشیه امن */
     }
 
     #capture-area {
@@ -22,6 +38,7 @@
       padding: 20px;
       border: 2px solid #000;
       box-shadow: 0 0 10px rgba(0,0,0,.1);
+      box-sizing: border-box; /* جلوگیری از تاثیر پدینگ روی عرض کل */
     }
 
     table { width: 100%; border-collapse: collapse; border: 2px solid #000; }
@@ -49,7 +66,6 @@
       width: auto; 
       flex-grow: 1;
       line-height: 1.8;
-      padding-bottom: 2px;
     }
     
     textarea { width: 100%; resize: none; overflow: hidden; display: block; }
@@ -57,18 +73,15 @@
     .answer-select {
       border: none; outline: none; background: transparent;
       color: red; font-size: 15px; font-weight: bold; font-family: Tahoma, sans-serif;
-      text-align: right; direction: rtl; width: auto; flex-grow: 1;
       appearance: none;
       background-image: url('data:image/svg+xml;utf8,<svg fill="%23ff0000" height="14" viewBox="0 0 24 24" width="14" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
       background-repeat: no-repeat; background-position: left center;
-      padding-left: 20px; line-height: 1.8; cursor: pointer;
+      padding-left: 20px; cursor: pointer;
     }
     
     .flex-row { display: flex; align-items: center; gap: 5px; justify-content: flex-start; direction: rtl; }
     .checkbox-group { display: inline-flex; align-items: center; gap: 4px; margin-left: 10px; cursor: pointer; }
-
     .checkbox-group:has(input:checked) { color: red; font-weight: bold; }
-
     input[type="checkbox"] { cursor: pointer; transform: scale(1.1); margin: 0; }
 
     .controls {
@@ -88,15 +101,12 @@
 
     .footer-row td { font-weight: bold; font-size: 21px; padding: 16px; }
     
-    #instagram { 
-      direction: ltr !important; 
-      text-align: left !important; 
-      unicode-bidi: plaintext !important;
-    }
+    #instagram { direction: ltr !important; text-align: left !important; unicode-bidi: plaintext !important; }
   </style>
 </head>
 <body>
 
+<div class="outer-wrapper">
   <div id="capture-area">
     <table>
       <tr><td colspan="2" class="header-cell">برگه بیوگرافی</td></tr>
@@ -122,7 +132,6 @@
               <option value="لیسانس">لیسانس</option>
               <option value="فوق لیسانس">فوق لیسانس</option>
               <option value="دکتری">دکتری</option>
-              <option value="نمی‌دانم">نمی‌دانم</option>
             </select>
           </div>
         </td>
@@ -134,8 +143,7 @@
             <select id="marriage" class="answer-select" required>
               <option value="" disabled selected>انتخاب کنید</option>
               <option value="مجرد">مجرد</option><option value="متأهل">متأهل</option>
-              <option value="طلاق گرفته">طلاق گرفته</option><option value="همسر فوت کرده">همسر فوت کرده</option>
-              <option value="نمی‌دانم">نمی‌دانم</option>
+              <option value="مطلقه">مطلقه</option><option value="بیوه">بیوه</option>
             </select>
           </div>
         </td>
@@ -143,9 +151,10 @@
           <div class="flex-row">تعداد فرزند:
             <select id="children" class="answer-select" required>
               <option value="" disabled selected>انتخاب کنید</option>
-              <option value="صفر">صفر</option><option value="۱">۱</option><option value="۲">۲</option>
-              <option value="۳">۳</option><option value="۴">۴</option>
-              <option value=" بیشتر از ۴">بیشتر از ۴</option><option value="نمی‌دانم">نمی‌دانم</option>
+              <option value="۰">۰</option><option value="۱">۱</option><option value="۲">۲</option>
+              <option value="۳">۳</option><option value="۴">۴</option><option value="۵">۵</option>
+              <option value="۶">۶</option><option value="۷">۷</option><option value="۸">۸</option>
+              <option value="۹">۹</option><option value="۱۰">۱۰</option>
             </select>
           </div>
         </td>
@@ -203,6 +212,7 @@
     <button class="btn-download" onclick="downloadJPG()">دانلود JPG</button>
     <input type="file" id="fileInput" accept=".json" onchange="restoreBackup(event)">
   </div>
+</div>
 
   <script>
     function downloadJPG(){
@@ -214,12 +224,10 @@
       const originalInsta = instaField.value;
       const originalDesc = finalDesc.value;
 
-      // ۱. اصلاح نمایش اینستاگرام
       if(originalInsta && !originalInsta.startsWith('\u200E')){
           instaField.value = '\u200E' + originalInsta;
       }
 
-      // ۲. ترفند نمایش کامل چند سطر توضیحات
       const descReplacement = document.createElement('div');
       descReplacement.innerText = originalDesc;
       descReplacement.style.whiteSpace = 'pre-wrap';
@@ -234,7 +242,6 @@
       finalDesc.style.display = 'none';
       finalDesc.parentNode.appendChild(descReplacement);
 
-      // نام‌گذاری فایل خروجی عکس بر اساس نام پراسپکت
       const jpgFileName = prospectName ? `بیوگرافی ${prospectName}.jpg` : 'biography-sheet.jpg';
 
       html2canvas(el, {
@@ -259,17 +266,12 @@
       document.querySelectorAll('input, textarea, select').forEach(el=>{
         data[el.id] = (el.type==='checkbox') ? el.checked : el.value;
       });
-
-      // گرفتن نام پراسپکت برای نام‌گذاری فایل پشتیبان
       const prospectName = document.getElementById('prospect_name').value.trim();
       const backupFileName = prospectName ? `بیوگرافی ${prospectName}.json` : 'backup-biography.json';
-
       const blob=new Blob([JSON.stringify(data)],{type:'application/json'});
       const url=URL.createObjectURL(blob);
       const a=document.createElement('a');
-      a.href=url; 
-      a.download = backupFileName;
-      a.click();
+      a.href=url; a.download = backupFileName; a.click();
     }
 
     function restoreBackup(e){
