@@ -2,7 +2,7 @@
 <html lang="fa" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=800">
+  <meta name="viewport" content="width=800, initial-scale=0.4, maximum-scale=2.0, user-scalable=yes">
   <title>برگه بیوگرافی</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
@@ -12,7 +12,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 20px;
+      padding: 20px 0; /* حذف پدینگ اضافی از طرفین برای موبایل */
       margin: 0;
     }
 
@@ -22,6 +22,7 @@
       padding: 20px;
       border: 2px solid #000;
       box-shadow: 0 0 10px rgba(0,0,0,.1);
+      box-sizing: border-box; /* برای جلوگیری از بزرگتر شدن عرض از 800 */
     }
 
     table { width: 100%; border-collapse: collapse; border: 2px solid #000; }
@@ -122,6 +123,7 @@
               <option value="لیسانس">لیسانس</option>
               <option value="فوق لیسانس">فوق لیسانس</option>
               <option value="دکتری">دکتری</option>
+              <option value="نمی‌دانم">نمی‌دانم</option>
             </select>
           </div>
         </td>
@@ -133,7 +135,8 @@
             <select id="marriage" class="answer-select" required>
               <option value="" disabled selected>انتخاب کنید</option>
               <option value="مجرد">مجرد</option><option value="متأهل">متأهل</option>
-              <option value="مطلقه">مطلقه</option><option value="بیوه">بیوه</option>
+              <option value="طلاق گرفته">طلاق گرفته</option><option value="همسر فوت کرده">همسر فوت کرده</option>
+              <option value="نمی‌دانم">نمی‌دانم</option>
             </select>
           </div>
         </td>
@@ -141,10 +144,9 @@
           <div class="flex-row">تعداد فرزند:
             <select id="children" class="answer-select" required>
               <option value="" disabled selected>انتخاب کنید</option>
-              <option value="۰">۰</option><option value="۱">۱</option><option value="۲">۲</option>
-              <option value="۳">۳</option><option value="۴">۴</option><option value="۵">۵</option>
-              <option value="۶">۶</option><option value="۷">۷</option><option value="۸">۸</option>
-              <option value="۹">۹</option><option value="۱۰">۱۰</option>
+              <option value="صفر">صفر</option><option value="۱">۱</option><option value="۲">۲</option>
+              <option value="۳">۳</option><option value="۴">۴</option>
+              <option value=" بیشتر از ۴">بیشتر از ۴</option><option value="نمی‌دانم">نمی‌دانم</option>
             </select>
           </div>
         </td>
@@ -213,12 +215,10 @@
       const originalInsta = instaField.value;
       const originalDesc = finalDesc.value;
 
-      // ۱. اصلاح نمایش اینستاگرام
       if(originalInsta && !originalInsta.startsWith('\u200E')){
           instaField.value = '\u200E' + originalInsta;
       }
 
-      // ۲. ترفند نمایش کامل چند سطر توضیحات
       const descReplacement = document.createElement('div');
       descReplacement.innerText = originalDesc;
       descReplacement.style.whiteSpace = 'pre-wrap';
@@ -233,7 +233,6 @@
       finalDesc.style.display = 'none';
       finalDesc.parentNode.appendChild(descReplacement);
 
-      // نام‌گذاری فایل خروجی عکس بر اساس نام پراسپکت
       const jpgFileName = prospectName ? `بیوگرافی ${prospectName}.jpg` : 'biography-sheet.jpg';
 
       html2canvas(el, {
@@ -258,17 +257,12 @@
       document.querySelectorAll('input, textarea, select').forEach(el=>{
         data[el.id] = (el.type==='checkbox') ? el.checked : el.value;
       });
-
-      // گرفتن نام پراسپکت برای نام‌گذاری فایل پشتیبان
       const prospectName = document.getElementById('prospect_name').value.trim();
       const backupFileName = prospectName ? `بیوگرافی ${prospectName}.json` : 'backup-biography.json';
-
       const blob=new Blob([JSON.stringify(data)],{type:'application/json'});
       const url=URL.createObjectURL(blob);
       const a=document.createElement('a');
-      a.href=url; 
-      a.download = backupFileName;
-      a.click();
+      a.href=url; a.download = backupFileName; a.click();
     }
 
     function restoreBackup(e){
