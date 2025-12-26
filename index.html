@@ -18,33 +18,35 @@
     table { width: 100%; border-collapse: collapse; border: 2px solid #000; }
     td { 
       border: 1px solid #000; 
-      padding: 4px 8px; /* کاهش پدینگ برای کم شدن ارتفاع ردیف */
+      padding: 2px 8px; /* فشرده‌تر شدن ردیف‌ها */
       vertical-align: middle; 
       font-size: 14px; 
-      line-height: 1.6; /* کاهش ارتفاع خط */
+      line-height: 1.8; 
       text-align: right; 
     }
     
-    .header-cell { text-align: center; font-weight: bold; font-size: 20px; padding: 10px; }
+    .header-cell { text-align: center; font-weight: bold; font-size: 20px; padding: 8px; }
 
     .flex-row { display: block; direction: rtl; white-space: nowrap; }
 
-    /* اصلاح هم‌راستایی و ارتفاع فیلدها */
+    /* استایل اصلاح شده برای جلوگیری از برش بدون جابجایی */
     input[type="text"] {
       border: none; outline: none; background: transparent;
       color: red; font-size: 15px; font-weight: bold; font-family: Tahoma, sans-serif;
       text-align: right; direction: rtl;
       display: inline-block;
       vertical-align: middle;
-      margin-top: -2px; /* تنظیم دقیق هم‌راستایی با عنوان */
       padding: 0;
-      width: auto;
+      margin-top: 0;
+      /* ترفند اصلی: ایجاد فضای امن در پایین متن با سایه شفاف */
+      text-shadow: 0 4px 0 rgba(255,255,255,0);
     }
     
     textarea { 
       width: 100%; border: none; outline: none; background: transparent;
       color: red; font-size: 15px; font-weight: bold; font-family: Tahoma, sans-serif;
-      resize: none; overflow: visible; display: block; line-height: 1.6;
+      resize: none; overflow: visible; display: block; line-height: 1.8;
+      text-shadow: 0 4px 0 rgba(255,255,255,0);
     }
 
     .answer-select {
@@ -58,8 +60,8 @@
       min-width: 80px;
       display: inline-block;
       vertical-align: middle;
-      margin-top: -3px; /* هم‌راستایی لیست کشویی */
       text-align: right; direction: rtl;
+      text-shadow: 0 4px 0 rgba(255,255,255,0);
     }
     
     .checkbox-group { display: inline-flex; align-items: center; gap: 4px; margin-left: 10px; cursor: pointer; font-size: 13px; }
@@ -78,7 +80,7 @@
 
     tr.merge-top td { border-bottom: none !important; }
     tr.merge-bottom td { border-top: none !important; }
-    .footer-row td { font-weight: bold; font-size: 19px; padding: 12px; }
+    .footer-row td { font-weight: bold; font-size: 19px; padding: 10px; }
     #instagram { direction: ltr !important; text-align: left !important; unicode-bidi: plaintext !important; }
   </style>
 </head>
@@ -197,8 +199,10 @@
       descReplacement.style.fontWeight = 'bold';
       descReplacement.style.fontFamily = 'Tahoma';
       descReplacement.style.textAlign = 'right';
-      descReplacement.style.lineHeight = '1.6';
+      descReplacement.style.lineHeight = '1.8';
       descReplacement.style.paddingBottom = '15px';
+      // اضافه کردن ترفند سایه به متن توضیحات نهایی هم
+      descReplacement.style.textShadow = '0 5px 0 rgba(255,255,255,0)';
       
       finalDesc.style.display = 'none';
       finalDesc.parentNode.appendChild(descReplacement);
