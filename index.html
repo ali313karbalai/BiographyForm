@@ -6,18 +6,9 @@
   <title>برگه بیوگرافی</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
-    html, body {
-      margin: 0; padding: 0; width: 100%; overflow-x: auto; background: #f0f0f0;
-    }
-
-    body {
-      font-family: Tahoma, Arial, sans-serif;
-      display: flex; flex-direction: column; align-items: center; padding: 20px 0;
-    }
-
-    .outer-wrapper {
-      display: flex; flex-direction: column; align-items: center; width: 100%; min-width: 820px;
-    }
+    html, body { margin: 0; padding: 0; width: 100%; overflow-x: auto; background: #f0f0f0; }
+    body { font-family: Tahoma, Arial, sans-serif; display: flex; flex-direction: column; align-items: center; padding: 20px 0; }
+    .outer-wrapper { display: flex; flex-direction: column; align-items: center; width: 100%; min-width: 820px; }
 
     #capture-area {
       background: #fff; width: 800px; padding: 20px; border: 2px solid #000;
@@ -26,64 +17,68 @@
 
     table { width: 100%; border-collapse: collapse; border: 2px solid #000; }
     td { 
-      border: 1px solid #000; padding: 8px; vertical-align: middle; 
-      font-size: 14px; line-height: 2; text-align: right; 
+      border: 1px solid #000; 
+      padding: 4px 8px; /* کاهش پدینگ برای کم شدن ارتفاع ردیف */
+      vertical-align: middle; 
+      font-size: 14px; 
+      line-height: 1.6; /* کاهش ارتفاع خط */
+      text-align: right; 
     }
     
-    .header-cell { text-align: center; font-weight: bold; font-size: 20px; padding: 15px; }
+    .header-cell { text-align: center; font-weight: bold; font-size: 20px; padding: 10px; }
 
-    .flex-row { 
-      display: flex; align-items: center; gap: 5px; justify-content: flex-start; 
-      direction: rtl; white-space: nowrap; 
-    }
+    .flex-row { display: block; direction: rtl; white-space: nowrap; }
 
-    /* اصلاح اصلی برای جلوگیری از برش حروف در خروجی JPG */
-    input[type="text"], textarea {
+    /* اصلاح هم‌راستایی و ارتفاع فیلدها */
+    input[type="text"] {
       border: none; outline: none; background: transparent;
       color: red; font-size: 15px; font-weight: bold; font-family: Tahoma, sans-serif;
-      text-align: right; direction: rtl; width: 100%; flex-grow: 1;
-      line-height: 2; 
-      padding-bottom: 6px; /* فضای کافی برای زیر حروف */
+      text-align: right; direction: rtl;
+      display: inline-block;
+      vertical-align: middle;
+      margin-top: -2px; /* تنظیم دقیق هم‌راستایی با عنوان */
+      padding: 0;
+      width: auto;
     }
     
-    textarea { width: 100%; resize: none; overflow: hidden; display: block; }
+    textarea { 
+      width: 100%; border: none; outline: none; background: transparent;
+      color: red; font-size: 15px; font-weight: bold; font-family: Tahoma, sans-serif;
+      resize: none; overflow: visible; display: block; line-height: 1.6;
+    }
 
     .answer-select {
       border: none; outline: none; background: transparent;
       color: red; font-size: 15px; font-weight: bold; font-family: Tahoma, sans-serif;
       appearance: none;
-      background-image: url('data:image/svg+xml;utf8,<svg fill="%23ff0000" height="14" viewBox="0 0 24 24" width="14" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
-      background-repeat: no-repeat; 
-      background-position: left center;
-      padding-left: 25px; 
-      padding-bottom: 6px; /* فضای کافی برای زیر حروف در لیست کشویی */
+      background-image: url('data:image/svg+xml;utf8,<svg fill="%23ff0000" height="12" viewBox="0 0 24 24" width="12" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+      background-repeat: no-repeat; background-position: left center;
+      padding-left: 20px;
       cursor: pointer;
-      min-width: 120px; 
-      flex-grow: 1;
-      text-align: right; 
-      direction: rtl;
-      line-height: 2;
+      min-width: 80px;
+      display: inline-block;
+      vertical-align: middle;
+      margin-top: -3px; /* هم‌راستایی لیست کشویی */
+      text-align: right; direction: rtl;
     }
     
-    .checkbox-group { display: inline-flex; align-items: center; gap: 4px; margin-left: 10px; cursor: pointer; }
+    .checkbox-group { display: inline-flex; align-items: center; gap: 4px; margin-left: 10px; cursor: pointer; font-size: 13px; }
     .checkbox-group:has(input:checked) { color: red; font-weight: bold; }
-    input[type="checkbox"] { cursor: pointer; transform: scale(1.1); margin: 0; }
+    input[type="checkbox"] { cursor: pointer; transform: scale(1); margin: 0; vertical-align: middle; }
 
     .controls {
       margin-top: 20px; display: flex; gap: 10px; background: #fff;
       padding: 15px; border-radius: 8px; width: 800px; justify-content: center; box-sizing: border-box;
     }
 
-    button { padding: 10px 20px; cursor: pointer; border: none; border-radius: 5px; font-family: Tahoma; font-weight: bold; }
+    button { padding: 8px 15px; cursor: pointer; border: none; border-radius: 5px; font-family: Tahoma; font-weight: bold; }
     .btn-download { background: #27ae60; color: #fff; }
     .btn-backup { background: #2980b9; color: #fff; }
     .btn-restore { background: #f39c12; color: #fff; }
 
-    #fileInput { display: none; }
     tr.merge-top td { border-bottom: none !important; }
     tr.merge-bottom td { border-top: none !important; }
-
-    .footer-row td { font-weight: bold; font-size: 21px; padding: 16px; }
+    .footer-row td { font-weight: bold; font-size: 19px; padding: 12px; }
     #instagram { direction: ltr !important; text-align: left !important; unicode-bidi: plaintext !important; }
   </style>
 </head>
@@ -94,16 +89,16 @@
     <table>
       <tr><td colspan="2" class="header-cell">برگه بیوگرافی</td></tr>
       <tr>
-        <td width="50%"><div class="flex-row">نام و نام خانوادگی معرف: <input type="text" id="moaref_name"></div></td>
-        <td width="50%"><div class="flex-row">نام و نام خانوادگی پراسپکت: <input type="text" id="prospect_name"></div></td>
+        <td width="50%"><div class="flex-row">نام و نام خانوادگی معرف: <input type="text" id="moaref_name" style="width:200px;"></div></td>
+        <td width="50%"><div class="flex-row">نام و نام خانوادگی پراسپکت: <input type="text" id="prospect_name" style="width:180px;"></div></td>
       </tr>
       <tr>
-        <td><div class="flex-row">ساعت دقیق و تاریخ پرزنت: <input type="text" id="present_date"></div></td>
-        <td><div class="flex-row">سن پراسپکت: <input type="text" id="prospect_age"></div></td>
+        <td><div class="flex-row">ساعت دقیق و تاریخ پرزنت: <input type="text" id="present_date" style="width:200px;"></div></td>
+        <td><div class="flex-row">سن پراسپکت: <input type="text" id="prospect_age" style="width:100px;"></div></td>
       </tr>
       <tr>
-        <td><div class="flex-row">مکان پرزنت: <input type="text" id="present_location"></div></td>
-        <td><div class="flex-row">نسبت با معرف: <input type="text" id="relation"></div></td>
+        <td><div class="flex-row">مکان پرزنت: <input type="text" id="present_location" style="width:250px;"></div></td>
+        <td><div class="flex-row">نسبت با معرف: <input type="text" id="relation" style="width:200px;"></div></td>
       </tr>
       <tr>
         <td>
@@ -114,7 +109,7 @@
             </select>
           </div>
         </td>
-        <td><div class="flex-row">رشته تحصیلی: <input type="text" id="major"></div></td>
+        <td><div class="flex-row">رشته تحصیلی: <input type="text" id="major" style="width:220px;"></div></td>
       </tr>
       <tr>
         <td>
@@ -130,21 +125,20 @@
             <select id="children" class="answer-select">
               <option value="" disabled selected>انتخاب کنید</option>
               <option>۰</option><option>۱</option><option>۲</option><option>۳</option><option>۴</option><option>۵</option>
-              <option>۶</option><option>۷</option><option>۸</option><option>۹</option><option>۱۰</option>
             </select>
           </div>
         </td>
       </tr>
-      <tr><td colspan="2"><div class="flex-row">شغل فعلی و سابقه مشاغل قبلی: <input type="text" id="job_history"></div></td></tr>
-      <tr><td colspan="2"><div class="flex-row">میزان درآمد: <input type="text" id="income"></div></td></tr>
+      <tr><td colspan="2"><div class="flex-row">شغل فعلی و سابقه مشاغل قبلی: <input type="text" id="job_history" style="width:550px;"></div></td></tr>
+      <tr><td colspan="2"><div class="flex-row">میزان درآمد: <input type="text" id="income" style="width:600px;"></div></td></tr>
       <tr class="merge-top"><td colspan="2"><div class="flex-row">دغدغه فعلی:
             <label class="checkbox-group">درآمد<input type="checkbox" id="d_daramad"></label>
             <label class="checkbox-group">زمان<input type="checkbox" id="d_zaman"></label>
             <label class="checkbox-group">پیشرفت<input type="checkbox" id="d_pishraft"></label>
             <label class="checkbox-group">امنیت شغلی<input type="checkbox" id="d_amniat"></label>
       </div></td></tr>
-      <tr class="merge-bottom"><td colspan="2"><div class="flex-row">توضیحات بیشتر: <input type="text" id="desc1"></div></td></tr>
-      <tr class="merge-top"><td colspan="2"><div class="flex-row" style="flex-wrap:wrap;">ویژگی‌های شخصیتی:
+      <tr class="merge-bottom"><td colspan="2"><div class="flex-row">توضیحات بیشتر: <input type="text" id="desc1" style="width:600px;"></div></td></tr>
+      <tr class="merge-top"><td colspan="2"><div class="flex-row">ویژگی‌های شخصیتی:
             <label class="checkbox-group">اجتماعی<input type="checkbox" id="v_ejtemai"></label>
             <label class="checkbox-group">ریسک‌پذیر<input type="checkbox" id="v_risk"></label>
             <label class="checkbox-group">مستقل<input type="checkbox" id="v_mostaghel"></label>
@@ -156,17 +150,17 @@
       <tr class="merge-bottom"><td colspan="2"><div class="flex-row">
             <label class="checkbox-group">خواستار تجربه‌های تازه<input type="checkbox" id="exp_new"></label>
             <label class="checkbox-group">اهمیت‌دهنده به حرف اطرافیان<input type="checkbox" id="atrafian"></label>
-            توضیحات بیشتر: <input type="text" id="desc2">
+            توضیحات بیشتر: <input type="text" id="desc2" style="width:300px;">
       </div></td></tr>
-      <tr><td colspan="2"><div class="flex-row">سرگرمی‌های مورد علاقه: <input type="text" id="hobbies"></div></td></tr>
-      <tr><td colspan="2"><div class="flex-row">میزان آشنایی با علم روز و بازاریابی شبکه‌ای: <input type="text" id="mlm_knowledge"></div></td></tr>
-      <tr><td colspan="2"><div class="flex-row">تاریخ آخرین دیدار و علت دیدار: <input type="text" id="last_visit"></div></td></tr>
-      <tr><td colspan="2"><div class="flex-row">آخرین خاطره مشترک: <input type="text" id="memory"></div></td></tr>
-      <tr><td colspan="2"><div class="flex-row">نیازهای امروزه و بزرگترین اهداف: <input type="text" id="goals"></div></td></tr>
-      <tr><td colspan="2"><div class="flex-row">چالش‌های زندگی: <input type="text" id="challenges"></div></td></tr>
-      <tr><td colspan="2"><div class="flex-row">اطلاعات داده شده در زنگ دعوت (دید کاری): <input type="text" id="invite_info"></div></td></tr>
-      <tr><td colspan="2"><div class="flex-row">آدرس اینستاگرام: <input type="text" id="instagram"></div></td></tr>
-      <tr><td colspan="2" style="height:100px; vertical-align:top;">توضیحات باقیمانده: <textarea id="final_desc" rows="4"></textarea></td></tr>
+      <tr><td colspan="2"><div class="flex-row">سرگرمی‌های مورد علاقه: <input type="text" id="hobbies" style="width:600px;"></div></td></tr>
+      <tr><td colspan="2"><div class="flex-row">میزان آشنایی با علم روز و بازاریابی شبکه‌ای: <input type="text" id="mlm_knowledge" style="width:500px;"></div></td></tr>
+      <tr><td colspan="2"><div class="flex-row">تاریخ آخرین دیدار و علت دیدار: <input type="text" id="last_visit" style="width:550px;"></div></td></tr>
+      <tr><td colspan="2"><div class="flex-row">آخرین خاطره مشترک: <input type="text" id="memory" style="width:600px;"></div></td></tr>
+      <tr><td colspan="2"><div class="flex-row">نیازهای امروزه و بزرگترین اهداف: <input type="text" id="goals" style="width:550px;"></div></td></tr>
+      <tr><td colspan="2"><div class="flex-row">چالش‌های زندگی: <input type="text" id="challenges" style="width:650px;"></div></td></tr>
+      <tr><td colspan="2"><div class="flex-row">اطلاعات داده شده در زنگ دعوت (دید کاری): <input type="text" id="invite_info" style="width:450px;"></div></td></tr>
+      <tr><td colspan="2"><div class="flex-row">آدرس اینستاگرام: <input type="text" id="instagram" style="width:600px;"></div></td></tr>
+      <tr><td colspan="2" style="height:80px; vertical-align:top;">توضیحات باقیمانده: <textarea id="final_desc" rows="4"></textarea></td></tr>
       <tr class="footer-row">
         <td colspan="2">
           اینجانب ( <input type="text" id="footer_me" style="width:120px; text-align:center;"> ) درخواست تأییدیه جهت زنگ دعوت به ایشان و مشخص کردن پرزنتور از آقا / خانم ( <input type="text" id="footer_target" style="width:120px; text-align:center;"> ) (اولین فالوئر) را دارم.
@@ -179,7 +173,7 @@
     <button class="btn-backup" onclick="saveBackup()">پشتیبان</button>
     <button class="btn-restore" onclick="document.getElementById('fileInput').click()">بازیابی</button>
     <button class="btn-download" onclick="downloadJPG()">دانلود JPG</button>
-    <input type="file" id="fileInput" accept=".json" onchange="restoreBackup(event)">
+    <input type="file" id="fileInput" accept=".json" onchange="restoreBackup(event)" style="display:none;">
   </div>
 </div>
 
@@ -193,9 +187,7 @@
       const originalInsta = instaField.value;
       const originalDesc = finalDesc.value;
 
-      if(originalInsta && !originalInsta.startsWith('\u200E')){
-          instaField.value = '\u200E' + originalInsta;
-      }
+      if(originalInsta && !originalInsta.startsWith('\u200E')) instaField.value = '\u200E' + originalInsta;
 
       const descReplacement = document.createElement('div');
       descReplacement.innerText = originalDesc;
@@ -205,26 +197,19 @@
       descReplacement.style.fontWeight = 'bold';
       descReplacement.style.fontFamily = 'Tahoma';
       descReplacement.style.textAlign = 'right';
-      descReplacement.style.lineHeight = '2';
-      descReplacement.style.paddingTop = '2px';
-      descReplacement.style.paddingBottom = '10px';
+      descReplacement.style.lineHeight = '1.6';
+      descReplacement.style.paddingBottom = '15px';
       
       finalDesc.style.display = 'none';
       finalDesc.parentNode.appendChild(descReplacement);
 
       const jpgFileName = prospectName ? `بیوگرافی ${prospectName}.jpg` : 'biography-sheet.jpg';
 
-      html2canvas(el, {
-        scale: 3, 
-        backgroundColor: '#ffffff', 
-        useCORS: true,
-        letterRendering: 1
-      }).then(canvas => {
+      html2canvas(el, { scale: 3, backgroundColor: '#ffffff', useCORS: true }).then(canvas => {
         const a = document.createElement('a');
         a.download = jpgFileName;
         a.href = canvas.toDataURL('image/jpeg', 0.98);
         a.click();
-        
         instaField.value = originalInsta;
         finalDesc.style.display = 'block';
         descReplacement.remove();
