@@ -95,12 +95,14 @@
       padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,.2);
       width: 800px; justify-content: center; box-sizing: border-box;
       margin-bottom: 40px;
+      flex-wrap: wrap;
     }
 
     button { padding: 10px 20px; cursor: pointer; border: none; border-radius: 5px; font-family: Tahoma; font-weight: bold; }
     .btn-download { background: #27ae60; color: #fff; }
     .btn-backup { background: #2980b9; color: #fff; }
     .btn-restore { background: #f39c12; color: #fff; }
+    .btn-share { background: #0088cc; color: #fff; } /* رنگ تلگرامی */
 
     #fileInput { display: none; }
     tr.merge-top td { border-bottom: none !important; }
@@ -121,10 +123,10 @@
     <div class="modal-content">
       <h3>راهنمای استفاده از فرم</h3>
       <ul>
-        <li><strong>مرورگر:</strong> جهت عملکرد صحیح دکمه‌ها، حتماً از مرورگر <strong>Chrome</strong> (گوگل کروم) استفاده کنید. از باز کردن فرم داخل تلگرام خودداری کنید.</li>
-        <li><strong>پشتیبان‌گیری:</strong> اطلاعات وارد شده را در قالب یک فایل ذخیره می‌کند تا بعداً بتوانید آن را ویرایش کنید.</li>
-        <li><strong>بازیابی:</strong> فایل پشتیبانی که قبلاً ذخیره کرده‌اید را فراخوانی می‌کند.</li>
-        <li><strong>دانلود تصویر:</strong> فرم تکمیل شده را به صورت عکس با کیفیت بالا در گالری شما ذخیره می‌کند.</li>
+        <li><strong>مرورگر:</strong> جهت عملکرد صحیح دکمه‌ها (به‌ویژه دانلود و اشتراک‌گذاری)، حتماً از <strong>Chrome</strong> استفاده کنید.</li>
+        <li><strong>پشتیبان‌گیری:</strong> ذخیره اطلاعات برای ویرایش در آینده.</li>
+        <li><strong>اشتراک‌گذاری:</strong> ارسال مستقیم عکس فرم به تلگرام یا سایر پیام‌رسان‌ها.</li>
+        <li><strong>دانلود تصویر:</strong> ذخیره فرم به صورت عکس در گالری.</li>
       </ul>
       <button class="btn-close-modal" onclick="closeModal()">متوجه شدم</button>
     </div>
@@ -233,22 +235,21 @@
   <div class="controls">
     <button class="btn-backup" onclick="saveBackup()">‌پشتیبان‌گیری</button>
     <button class="btn-restore" onclick="document.getElementById('fileInput').click()">بازیابی</button>
-    <button class="btn-download" onclick="downloadJPG()">دانلود تصویر فرم</button>
+    <button class="btn-share" onclick="shareImage()">ارسال به تلگرام / ایتا</button>
+    <button class="btn-download" onclick="downloadJPG()">دانلود تصویر</button>
     <input type="file" id="fileInput" accept=".json" onchange="restoreBackup(event)">
   </div>
 
   <script>
-    // بستن پاپ‌آپ
     function closeModal() {
       document.getElementById('guide-modal').style.display = 'none';
     }
 
-    function downloadJPG(){
+    // تابع مشترک برای آماده‌سازی المان جهت عکس‌برداری
+    async function prepareForCapture() {
       const el = document.getElementById('capture-area');
       const instaField = document.getElementById('instagram');
       const finalDesc = document.getElementById('final_desc');
-      const prospectName = document.getElementById('prospect_name').value.trim();
-      
       const originalInsta = instaField.value;
       const originalDesc = finalDesc.value;
 
@@ -258,35 +259,53 @@
 
       const descReplacement = document.createElement('div');
       descReplacement.innerText = originalDesc;
-      descReplacement.style.whiteSpace = 'pre-wrap';
-      descReplacement.style.color = 'red';
-      descReplacement.style.fontSize = '15px';
-      descReplacement.style.fontWeight = 'bold';
-      descReplacement.style.fontFamily = 'Tahoma';
-      descReplacement.style.textAlign = 'right';
-      descReplacement.style.lineHeight = '1.8';
-      descReplacement.style.paddingTop = '2px';
+      descReplacement.style.cssText = "white-space:pre-wrap; color:red; font-size:15px; font-weight:bold; font-family:Tahoma; text-align:right; line-height:1.8; padding-top:2px;";
       
       finalDesc.style.display = 'none';
       finalDesc.parentNode.appendChild(descReplacement);
 
-      const jpgFileName = prospectName ? `بیوگرافی ${prospectName}.jpg` : 'biography-sheet.jpg';
+      const canvas = await html2canvas(el, { scale: 3, backgroundColor: '#ffffff', useCORS: true });
+      
+      // بازگرداندن وضعیت فرم به حالت اول
+      instaField.value = originalInsta;
+      finalDesc.style.display = 'block';
+      descReplacement.remove();
+      
+      return canvas;
+    }
 
-      html2canvas(el, {
-        scale: 3, 
-        backgroundColor: '#ffffff', 
-        useCORS: true,
-        letterRendering: 1
-      }).then(canvas => {
-        const a = document.createElement('a');
-        a.download = jpgFileName;
-        a.href = canvas.toDataURL('image/jpeg', 0.98);
-        a.click();
+    // دکمه دانلود معمولی
+    async function downloadJPG(){
+      const prospectName = document.getElementById('prospect_name').value.trim();
+      const canvas = await prepareForCapture();
+      const a = document.createElement('a');
+      a.download = prospectName ? `بیوگرافی ${prospectName}.jpg` : 'biography-sheet.jpg';
+      a.href = canvas.toDataURL('image/jpeg', 0.98);
+      a.click();
+    }
+
+    // دکمه اشتراک‌گذاری سیستمی (تلگرام و ...)
+    async function shareImage() {
+      try {
+        const prospectName = document.getElementById('prospect_name').value.trim();
+        const canvas = await prepareForCapture();
         
-        instaField.value = originalInsta;
-        finalDesc.style.display = 'block';
-        descReplacement.remove();
-      });
+        canvas.toBlob(async (blob) => {
+          const file = new File([blob], 'biography.jpg', { type: 'image/jpeg' });
+          
+          if (navigator.canShare && navigator.canShare({ files: [file] })) {
+            await navigator.share({
+              files: [file],
+              title: 'برگه بیوگرافی',
+              text: `بیوگرافی ${prospectName}`
+            });
+          } else {
+            alert("مرورگر شما از قابلیت اشتراک‌گذاری مستقیم فایل پشتیبانی نمی‌کند. لطفاً ابتدا تصویر را دانلود و سپس در تلگرام ارسال کنید.");
+          }
+        }, 'image/jpeg', 0.95);
+      } catch (err) {
+        console.error('خطا در اشتراک‌گذاری:', err);
+      }
     }
 
     function saveBackup(){
